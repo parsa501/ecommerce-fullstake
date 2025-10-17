@@ -9,12 +9,11 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "رمز عبور الزامی است"],
     },
     email: {
       type: String,
-      unique: [true, "ایمیل باید یکتا باشد"],
-      required: [true, "ایمیل الزامی است"],
+      unique: [true,"ایمل شما قبلا وجود داشته است"],
+      sparse: true,
       match: [/\S+@\S+\.\S+/, "آدرس ایمیل معتبر نیست"],
       trim: true,
     },
