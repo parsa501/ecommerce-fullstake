@@ -25,7 +25,12 @@ const userSchema = new mongoose.Schema(
       match: [/^(\+98|0)?9\d{9}$/, "شماره تلفن معتبر نیست"],
     },
     favoriteProducts: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+      ],
       default: [],
     },
     cartId: {
@@ -33,15 +38,30 @@ const userSchema = new mongoose.Schema(
       ref: "Cart",
     },
     boughtProducts: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+      ],
       default: [],
     },
     addressIds: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Address" }],
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Address",
+        },
+      ],
       default: [],
     },
     ratedProducts: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+      ],
       default: [],
     },
     role: {
@@ -53,5 +73,5 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("UserModels", userSchema);
 export default User;
