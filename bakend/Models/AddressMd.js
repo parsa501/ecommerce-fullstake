@@ -12,14 +12,14 @@ const addressSchema = new mongoose.Schema(
       required: [true, "نام خیابان الزامی است"],
       trim: true,
     },
-    city: {
-      type: String,
-      required: [true, "نام شهر الزامی است"],
-      trim: true,
-    },
     state: {
       type: String,
       required: [true, "استان الزامی است"],
+      trim: true,
+    },
+    city: {
+      type: String,
+      required: [true, "نام شهر الزامی است"],
       trim: true,
     },
     postalCode: {
