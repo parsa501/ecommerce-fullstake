@@ -40,5 +40,5 @@ productVariantSchema.pre("save", function (next) {
   next();
 });
 
-const ProductVariant = mongoose.model("ProductVariantModels", productVariantSchema);
+const ProductVariant = mongoose.model("ProductVariant", productVariantSchema);
 export default ProductVariant;

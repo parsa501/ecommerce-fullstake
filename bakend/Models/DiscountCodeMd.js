@@ -59,5 +59,5 @@ const discountCodeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const DiscountCode = mongoose.model("DiscountCodeModels", discountCodeSchema);
+const DiscountCode = mongoose.model("DiscountCode", discountCodeSchema);
 export default DiscountCode;
