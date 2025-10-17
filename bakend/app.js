@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import morgan from "morgan";
 import { catchError,HandleERROR } from "vanta-api";
-// import authRouter from "./Routes/Auth.js";
+import authRouter from "./Routes/Auth.js";
 import swaggerUi from "swagger-ui-express"
 import swaggerDocs from "./Utils/Swagger.js";
 import exportValidation from "./Middleware/ExportValidation.js";
@@ -17,7 +17,7 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.static("Public"));
 
-// app.use("/api/auth", authRouter);
+app.use("/api/auth", authRouter);
 app.use(exportValidation);
 
 
