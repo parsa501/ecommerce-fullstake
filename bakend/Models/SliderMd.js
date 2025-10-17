@@ -21,5 +21,5 @@ const sliderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Slider = mongoose.model("Slider", sliderSchema);
+const Slider = mongoose.model("SliderModels", sliderSchema);
 export default Slider;
