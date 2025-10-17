@@ -1,0 +1,24 @@
+import mongoose from "mongoose";
+
+const variantSchema = new mongoose.Schema(
+  {
+    type: {
+      type: String,
+      required: [true, "نوع ویژگی الزامی است"],
+      enum: {
+        values: ["color", "size"],
+        message: "نوع ویژگی باید 'color' یا 'size' باشد",
+      },
+      trim: true,
+    },
+    value: {
+      type: String,
+      required: [true, "مقدار ویژگی الزامی است"],
+      trim: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const Variant = mongoose.model("VariantModels", variantSchema);
+export default Variant;
