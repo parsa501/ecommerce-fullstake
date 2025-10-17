@@ -4,11 +4,12 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 import morgan from "morgan";
-import { catchError,HandleERROR } from "vanta-api";
+import { catchError, HandleERROR } from "vanta-api";
 import authRouter from "./Routes/Auth.js";
-import swaggerUi from "swagger-ui-express"
+import swaggerUi from "swagger-ui-express";
 import swaggerDocs from "./Utils/Swagger.js";
-import exportValidation from "./Middleware/ExportValidation.js";
+import exportValidation from "./Middlewares/ExportValidation.js";
+import userRouter from "./Routes/User.js";
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 const app = express();
@@ -17,14 +18,13 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.static("Public"));
 
-app.use("/api/auth", authRouter);
 app.use(exportValidation);
+app.use("/api/auth", authRouter);
+app.use("/api/users", userRouter);
 
-
-
-app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerDocs))
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {
-  return next(new HandleERROR('Not Found', 404));
+  return next(new HandleERROR("Not Found", 404));
 });
-app.use(catchError)
-export default app
+app.use(catchError);
+export default app;
