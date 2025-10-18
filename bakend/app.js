@@ -10,6 +10,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocs from "./Utils/Swagger.js";
 import exportValidation from "./Middlewares/ExportValidation.js";
 import userRouter from "./Routes/User.js";
+import addressRouter from "./Routes/Address.js";
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.static("Public"));
 app.use(exportValidation);
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
+app.use("/api/address", addressRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {
