@@ -14,6 +14,7 @@ import addressRouter from "./Routes/Address.js";
 import brandRouter from "./Routes/Brand.js";
 import uploadRouter from "./Routes/Upload.js";
 import bannerRouter from "./Routes/banner.js";
+import categoryRouter from "./Routes/Category.js";
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
@@ -30,6 +31,7 @@ app.use("/api/address", addressRouter);
 app.use('/api/brands', brandRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/banner", bannerRouter);
+app.use("/api/category", categoryRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {
