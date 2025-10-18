@@ -8,7 +8,7 @@ export const sendAuthCode=async(Mobile)=>{
           },
           body:JSON.stringify({
             Mobile,
-            Footer:'i3 center'
+            Footer:'به فروشگاه خوش آمدید'
           })
         })
         const data=await res.json()
