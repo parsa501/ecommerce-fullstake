@@ -79,16 +79,22 @@ export const update = catchAsync(async (req, res, next) => {
 
 export const remove = catchAsync(async (req, res, next) => {
   const { id } = req.params;
+
   const address = await Address.findById(id);
   if (!address) return next(new HandleERROR("آدرس مورد نظر یافت نشد", 404));
 
   if (address.userId.toString() !== req.userId && req.role !== "admin") {
     return next(new HandleERROR("شما مجاز به حذف این آدرس نیستید", 403));
   }
-  await address.remove();
-  await User.findByIdAndUpdate(req.userId, {
-    $pull: { addressIds: id },
-  });
+
+  await Address.findByIdAndDelete(id);
+
+  const ownerId = address.userId?.toString();
+  if (ownerId) {
+    await User.findByIdAndUpdate(ownerId, {
+      $pull: { addressIds: id },
+    });
+  }
 
   return res.status(200).json({
     success: true,
