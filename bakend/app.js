@@ -18,6 +18,7 @@ import categoryRouter from "./Routes/Category.js";
 import sliderRouter from "./Routes/Slider.js";
 import isAdmin from "./Middlewares/IsAdmin.js";
 import variantRouter from "./Routes/Variant.js";
+import productVariantRouter from "./Routes/ProductVariant.js";
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
@@ -37,6 +38,7 @@ app.use("/api/banner", bannerRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/slider", sliderRouter);
 app.use('/api/variants', isAdmin,variantRouter);
+app.use('/api/product-variants',productVariantRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {
