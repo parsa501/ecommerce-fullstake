@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { __dirname } from "./app.js";
 import mongoose from "mongoose";
 dotenv.config({path:`${__dirname}/config.env`});
-const port=process.env.PORT || 5000
+const port=process.env.PORT || 3000
 mongoose.connect(process.env.DATA_BASE).then(() => {
   console.log("Database connected successfully");
 }).catch((error) => {
