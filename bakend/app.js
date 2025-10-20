@@ -19,6 +19,7 @@ import sliderRouter from "./Routes/Slider.js";
 import isAdmin from "./Middlewares/IsAdmin.js";
 import variantRouter from "./Routes/Variant.js";
 import productVariantRouter from "./Routes/ProductVariant.js";
+import productRouter from "./Routes/Product.js";
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
@@ -26,19 +27,20 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
-app.use('/upload',express.static("Public/Uploads"));
+app.use("/upload", express.static("Public/Uploads"));
 
 app.use(exportValidation);
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/address", addressRouter);
-app.use('/api/brands', brandRouter);
+app.use("/api/brands", brandRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/banner", bannerRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/slider", sliderRouter);
-app.use('/api/variants', isAdmin,variantRouter);
-app.use('/api/product-variants',productVariantRouter);
+app.use("/api/variants", isAdmin, variantRouter);
+app.use("/api/product-variants", productVariantRouter);
+app.use("/api/product", productRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {
