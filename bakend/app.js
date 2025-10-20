@@ -21,6 +21,7 @@ import variantRouter from "./Routes/Variant.js";
 import productVariantRouter from "./Routes/ProductVariant.js";
 import productRouter from "./Routes/Product.js";
 import cartRouter from "./Routes/Cart.js";
+import commentRouter from "./Routes/Comment.js";
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
@@ -43,6 +44,7 @@ app.use("/api/variants", isAdmin, variantRouter);
 app.use("/api/product-variants", productVariantRouter);
 app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api/comments", commentRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {
