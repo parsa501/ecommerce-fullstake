@@ -60,6 +60,18 @@ export const getOne = catchAsync(async (req, res, next) => {
 
 export const update = catchAsync(async (req, res, next) => {
   const { id } = req.params;
+  const { price, discount } = req.body;
+
+  if (price !== undefined || discount !== undefined) {
+    const product = await ProductVariant.findById(id);
+    if (product) {
+      const newPrice = price ?? product.price;
+      const newDiscount = discount ?? product.discount;
+      req.body.priceAfterDiscount =
+        newPrice - (newPrice * newDiscount) / 100;
+    }
+  }
+
   const productVariant = await ProductVariant.findByIdAndUpdate(id, req.body, {
     new: true,
     runValidators: true,
@@ -75,6 +87,7 @@ export const update = catchAsync(async (req, res, next) => {
     data: productVariant,
   });
 });
+
 
 export const remove = catchAsync(async (req, res, next) => {
   const { id } = req.params;
