@@ -20,6 +20,7 @@ import isAdmin from "./Middlewares/IsAdmin.js";
 import variantRouter from "./Routes/Variant.js";
 import productVariantRouter from "./Routes/ProductVariant.js";
 import productRouter from "./Routes/Product.js";
+import cartRouter from "./Routes/Cart.js";
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
@@ -41,6 +42,7 @@ app.use("/api/slider", sliderRouter);
 app.use("/api/variants", isAdmin, variantRouter);
 app.use("/api/product-variants", productVariantRouter);
 app.use("/api/product", productRouter);
+app.use("/api/cart", cartRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {
