@@ -19,7 +19,6 @@ const productVariantSchema = new mongoose.Schema(
     },
     priceAfterDiscount: {
       type: Number,
-      required: [true, "قیمت پس از تخفیف الزامی است"],
     },
     productId: {
       type: mongoose.Schema.Types.ObjectId,
