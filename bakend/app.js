@@ -48,7 +48,7 @@ app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/comments", commentRouter);
 app.use("/api/discount", discountRouter);
-app.use("/api/ourder", orderRouter);
+app.use("/api/orders", orderRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {
