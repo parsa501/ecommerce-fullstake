@@ -55,11 +55,6 @@ export const update = catchAsync(async (req, res, next) => {
     new: true,
     runValidators: true,
   });
-
-  if (!faq) {
-    return next(new HandleERROR("پرسش و پاسخ مورد نظر یافت نشد", 404));
-  }
-
   return res.status(200).json({
     success: true,
     message: "پرسش و پاسخ با موفقیت بروزرسانی شد",

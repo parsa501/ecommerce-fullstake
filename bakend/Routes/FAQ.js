@@ -180,7 +180,7 @@
  */
 
 import express from 'express';
-import { create, getAll, getOne, remove, update } from '../Controllers/CategoryCn.js';
+import { create, getAll, getOne, remove, update } from '../Controllers/FAQCn.js';
 
 const faqRouter = express.Router();
 
