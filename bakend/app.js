@@ -53,8 +53,8 @@ app.use("/api/comments", commentRouter);
 app.use("/api/discount", discountRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/report", isAdmin, reportRouter);
-app.use("/api/serach", searchrouter);
 app.use("/api/faq", faqRouter);
+app.use("/api/serach", searchrouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {
