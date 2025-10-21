@@ -26,6 +26,7 @@ import discountRouter from "./Routes/DiscountCode.js";
 import orderRouter from "./Routes/Order.js";
 import reportRouter from "./Routes/Report.js";
 import searchrouter from "./Routes/Search.js";
+import faqRouter from "./Routes/FAQ.js";
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
@@ -53,6 +54,7 @@ app.use("/api/discount", discountRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/report", isAdmin, reportRouter);
 app.use("/api/serach", searchrouter);
+app.use("/api/faq", faqRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {
