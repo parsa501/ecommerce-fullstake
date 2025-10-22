@@ -5,9 +5,15 @@ import { MdHome, MdComment, MdPeople, MdCategory, MdArticle } from "react-icons/
 export default function Sidebar() {
   const navItems = [
     { name: "خانه", key: "/", icon: <MdHome /> },
-    { name: "نظرات", key: "/comments", icon: <MdComment /> },
     { name: "کاربران", key: "/users", icon: <MdPeople /> },
-    { name: "دسته‌بندی‌ها", key: "/category", icon: <MdCategory /> },
+    { name: "نظرات", key: "/address", icon: <MdComment /> },
+    { name: "دسته‌بندی‌ها", key: "/brands", icon: <MdCategory /> },
+    { name: "پست‌ها", key: "/banner", icon: <MdArticle /> },
+    { name: "پست‌ها", key: "/post", icon: <MdArticle /> },
+    { name: "پست‌ها", key: "/post", icon: <MdArticle /> },
+    { name: "پست‌ها", key: "/post", icon: <MdArticle /> },
+    { name: "پست‌ها", key: "/post", icon: <MdArticle /> },
+    { name: "پست‌ها", key: "/post", icon: <MdArticle /> },
     { name: "پست‌ها", key: "/post", icon: <MdArticle /> },
   ];
 
