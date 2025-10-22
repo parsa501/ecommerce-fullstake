@@ -17,7 +17,7 @@ export default function Layout() {
   return (
     <div
       dir="rtl"
-      className="flex h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white"
+      className="flex h-[300vh] bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white"
     >
       {/* نوار کناری */}
       <Sidebar className="bg-white/10 backdrop-blur-xl border-l border-white/20 shadow-xl" />
