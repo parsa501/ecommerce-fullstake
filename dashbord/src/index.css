@@ -1,1 +1,9 @@
 @import "tailwindcss";
+@import url('https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css');
+
+html, body {
+  direction: rtl;
+  font-family: 'Vazir', sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
