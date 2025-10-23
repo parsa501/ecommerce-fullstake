@@ -70,7 +70,7 @@ export default function UpdateVariants() {
             name="type"
             value={fields.type}
             onChange={handleChange}
-            className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-100"
+            className="w-full px-4 py-3 bg-black/75 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-100"
           >
             <option value="رنگ">رنگ</option>
             <option value="سایز">سایز</option>
