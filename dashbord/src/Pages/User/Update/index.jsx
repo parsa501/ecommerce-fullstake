@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import fetchData from "../../../Utils/fetchData";
 import { AuthContext } from "../../../Context/AuthContext";
 import notify from "../../../Utils/Notify";
+import useFormFields from "../../../Utils/useFormFields";
 
 export default function UpdateUser() {
   const { id } = useParams();
@@ -11,19 +12,20 @@ export default function UpdateUser() {
 
   const [submitting, setSubmitting] = useState(false);
   const [me, setMe] = useState(null);
-  const [form, setForm] = useState({
+  const [form, handleChange] = useFormFields({
     username: "",
     password: "",
+    email: "",
+    phoneNumber: "",
     role: "user",
   });
 
+  const [initialData, setInitialData] = useState(null); // 🟢 برای مقداردهی اولیه
+
   useEffect(() => {
     let mounted = true;
-
     const load = async () => {
-      if (!token) {
-        return;
-      }
+      if (!token) return;
 
       const [userRes, meRes] = await Promise.allSettled([
         fetchData(`users/${id}`, {
@@ -38,55 +40,60 @@ export default function UpdateUser() {
 
       if (!mounted) return;
 
-      if (userRes.status === "rejected") {
-        return;
+      if (meRes.status === "fulfilled" && meRes.value?.data?.user) {
+        setMe(meRes.value.data.user);
       }
 
-      const userResult = userRes.value;
-      const userData =
-        userResult?.data && !Array.isArray(userResult.data)
-          ? userResult.data
-          : Array.isArray(userResult?.data)
-          ? userResult.data[0]
-          : userResult.data ?? null;
+      if (userRes.status === "fulfilled" && userRes.value?.data) {
+        const u =
+          Array.isArray(userRes.value.data) && userRes.value.data.length > 0
+            ? userRes.value.data[0]
+            : userRes.value.data;
 
-      if (!userData) {
-        return;
+        if (u) {
+          setInitialData({
+            username: u.username || "",
+            email: u.email || "",
+            phoneNumber: u.phoneNumber || "",
+            role: u.role || "user",
+            password: "",
+          });
+        }
       }
-
-      if (meRes.status === "fulfilled" && meRes.value?.data) {
-        setMe(meRes.value.data);
-      }
-
-      setForm({
-        username: userData.username || "",
-        password: "",
-        role: userData.role || "user",
-      });
     };
-
     load();
-    return () => {
-      mounted = false;
-    };
+    return () => (mounted = false);
   }, [id, token]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((s) => ({ ...s, [name]: value }));
-  };
+  // 🟢 پر کردن فرم زمانی که داده آماده شد
+  useEffect(() => {
+    if (initialData) {
+      const fakeEvent = (name, value) => ({
+        target: { name, value },
+      });
+      Object.entries(initialData).forEach(([key, val]) =>
+        handleChange(fakeEvent(key, val))
+      );
+    }
+  }, [initialData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.username.trim()) {
-      notify("error", "Username is required");
-      return;
-    }
+
+    if (!form.username.trim()) return notify("error", "نام کاربری الزامی است");
+    if (!form.phoneNumber.trim())
+      return notify("error", "شماره تلفن الزامی است");
+
     setSubmitting(true);
-    
-    const payload = { username: form.username.trim() };
+
+    const payload = {
+      username: form.username.trim(),
+      email: form.email?.trim(),
+      phoneNumber: form.phoneNumber?.trim(),
+    };
+
     if (form.password.trim()) payload.password = form.password;
-    if (me?.role === "admin" && form.role) payload.role = form.role;
+    if (me?.role === "superAdmin" && form.role) payload.role = form.role;
 
     const result = await fetchData(`users/${id}`, {
       method: "PATCH",
@@ -97,32 +104,33 @@ export default function UpdateUser() {
       body: JSON.stringify(payload),
     });
 
-    if (result.status === 200 || result.success) {
-      notify("success", result.message || "User updated");
+    if (result.success || result.status === 200) {
+      notify("success", result.message || "کاربر با موفقیت ویرایش شد");
       navigate("/users");
     } else {
-      notify("error", result.message || "Update failed");
+      notify("error", result.message || "ویرایش انجام نشد");
     }
-    
+
     setSubmitting(false);
   };
 
   return (
     <div className="p-8 mx-16 bg-white/10 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 mt-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-100">Update User</h2>
+        <h2 className="text-2xl font-bold text-gray-100">ویرایش کاربر</h2>
         <button
           type="button"
           onClick={() => navigate(-1)}
           className="text-sm px-3 py-2 rounded-lg bg-gray-700 text-gray-200 hover:bg-gray-600 transition"
         >
-          Back
+          بازگشت
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* USERNAME */}
         <div>
-          <label className="block text-sm text-gray-300 mb-2">Username</label>
+          <label className="block text-sm text-gray-300 mb-2">نام کاربری</label>
           <input
             name="username"
             value={form.username}
@@ -133,50 +141,78 @@ export default function UpdateUser() {
           />
         </div>
 
+        {/* EMAIL */}
         <div>
-          <label className="block text-sm text-gray-300 mb-2">
-            New Password
-          </label>
+          <label className="block text-sm text-gray-300 mb-2">ایمیل</label>
+          <input
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="example@email.com"
+          />
+        </div>
+
+        {/* PHONE */}
+        <div>
+          <label className="block text-sm text-gray-300 mb-2">شماره تلفن</label>
+          <input
+            name="phoneNumber"
+            value={form.phoneNumber}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-400"
+            placeholder="09123456789"
+            required
+          />
+        </div>
+
+        {/* PASSWORD */}
+        <div>
+          <label className="block text-sm text-gray-300 mb-2">رمز جدید</label>
           <input
             name="password"
             type="password"
             value={form.password}
             onChange={handleChange}
             className="w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            placeholder="leave blank to keep current password"
+            placeholder="در صورت عدم تغییر خالی بگذارید"
           />
         </div>
 
+        {/* ROLE */}
         <div>
-          <label className="block text-sm text-gray-300 mb-2">Role</label>
+          <label className="block text-sm text-gray-300 mb-2">نقش</label>
           <select
             name="role"
             value={form.role}
             onChange={handleChange}
-            disabled={me?.role == "admin" ? true : false}
+            disabled={me?.role !== "superAdmin"} // ✅ برعکس شد
             className={`w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-gray-100 focus:outline-none ${
-              me?.role !== "admin"
+              me?.role === "superAdmin"
                 ? "focus:ring-2 focus:ring-emerald-400"
                 : "opacity-60 cursor-not-allowed"
             }`}
           >
             <option value="user">user</option>
             <option value="admin">admin</option>
+            <option value="superAdmin">superAdmin</option>
           </select>
-          {me?.role !== "admin" && (
+          {me?.role !== "superAdmin" && (
             <p className="text-xs text-gray-400 mt-1">
-              Only admins can change role
+              فقط سوپر ادمین‌ها می‌توانند نقش را تغییر دهند
             </p>
           )}
         </div>
 
+        {/* BUTTONS */}
         <div className="flex justify-end gap-4">
           <button
             type="button"
             onClick={() => navigate("/users")}
             className="px-5 py-3 rounded-xl bg-gray-700 text-gray-200 hover:bg-gray-600 transition"
           >
-            Cancel
+            انصراف
           </button>
           <button
             type="submit"
@@ -187,7 +223,7 @@ export default function UpdateUser() {
                 : "bg-gradient-to-r from-cyan-400 to-blue-500 hover:scale-105"
             }`}
           >
-            {submitting ? "Updating..." : "Update User"}
+            {submitting ? "در حال ویرایش..." : "ویرایش کاربر"}
           </button>
         </div>
       </form>
