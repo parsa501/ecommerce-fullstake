@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useFormFields from "../../../Utils/useFormFields";
 import { AuthContext } from "../../../Context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,6 +15,7 @@ export default function UpdateProduct() {
     description: "",
     brandId: "",
     categoryId: "",
+    isPublished: false, // ← اضافه شد
   });
 
   const [brands, setBrands] = useState([]);
@@ -23,48 +24,53 @@ export default function UpdateProduct() {
 
   useEffect(() => {
     // بارگذاری برندها و دسته‌بندی‌ها
-    const loadData = async () => {
-      const bRes = await fetchData("brands", { headers: { Authorization: `Bearer ${token}` } });
-      if (bRes.success) setBrands(bRes.data);
-      else Notify("error", bRes.message);
+    (async () => {
+      const resBrands = await fetchData("brands", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (resBrands.success) setBrands(resBrands.data);
 
-      const cRes = await fetchData("category", { headers: { Authorization: `Bearer ${token}` } });
-      if (cRes.success) setCategories(cRes.data);
-      else Notify("error", cRes.message);
-    };
+      const resCategories = await fetchData("category", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (resCategories.success) setCategories(resCategories.data);
+    })();
+  }, [token]);
 
-    // بارگذاری دادهٔ محصول
-    const loadProduct = async () => {
-      const res = await fetchData(`product/${id}`, { headers: { Authorization: `Bearer ${token}` } });
-      if (res.success && res.data) setFields(res.data);
-      else {
-        Notify("error", res.message || "محصول یافت نشد");
-        navigate("/product");
-      }
-    };
-
-    loadData();
-    loadProduct();
-  }, [id, token]);
+  useEffect(() => {
+    // بارگذاری داده محصول برای ویرایش
+    (async () => {
+      const result = await fetchData(`product/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (result.success) setFields(result.data);
+      else Notify("error", "محصول یافت نشد");
+    })();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const result = await fetchData(`product/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify(fields),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    try {
+      const result = await fetchData(`product/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(fields),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    setLoading(false);
-    if (result.success) {
-      Notify("success", result.message);
-      navigate("/product");
-    } else Notify("error", result.message || "خطا در بروزرسانی محصول");
+      setLoading(false);
+      if (result.success) {
+        Notify("success", "محصول با موفقیت ویرایش شد");
+        navigate("/product");
+      } else Notify("error", result.message || "خطا در ویرایش محصول");
+    } catch (err) {
+      setLoading(false);
+      Notify("error", err.message || "خطا در ارسال");
+    }
   };
 
   return (
@@ -77,11 +83,12 @@ export default function UpdateProduct() {
         <div>
           <label className="block mb-1 text-sm font-medium">نام محصول</label>
           <input
+            type="text"
             name="title"
             value={fields.title}
             onChange={handleChange}
-            placeholder="مثلاً گوشی موبایل"
-            className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-100 placeholder-gray-400"
+            placeholder="مثلاً آیفون ۱۴"
+            className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 text-gray-100"
           />
         </div>
 
@@ -92,7 +99,7 @@ export default function UpdateProduct() {
             value={fields.description}
             onChange={handleChange}
             placeholder="توضیحات محصول"
-            className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-100 placeholder-gray-400"
+            className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 text-gray-100"
           />
         </div>
 
@@ -102,7 +109,7 @@ export default function UpdateProduct() {
             name="brandId"
             value={fields.brandId}
             onChange={handleChange}
-            className="w-full px-4 py-3 bg-black/75 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-100"
+            className="w-full px-4 py-3 bg-black/75 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 text-gray-100"
           >
             <option value="">انتخاب برند</option>
             {brands.map((b) => (
@@ -119,7 +126,7 @@ export default function UpdateProduct() {
             name="categoryId"
             value={fields.categoryId}
             onChange={handleChange}
-            className="w-full px-4 py-3 bg-black/75 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-100"
+            className="w-full px-4 py-3 bg-black/75 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 text-gray-100"
           >
             <option value="">انتخاب دسته‌بندی</option>
             {categories.map((c) => (
@@ -130,11 +137,23 @@ export default function UpdateProduct() {
           </select>
         </div>
 
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="isPublished"
+            checked={fields.isPublished}
+            onChange={(e) =>
+              handleChange({ target: { name: "isPublished", value: e.target.checked } })
+            }
+          />
+          <span>منتشر شود</span>
+        </div>
+
         <button
           type="submit"
-          disabled={loading || !fields.title}
-          className={`w-full py-3 rounded-lg font-medium transition-all ${
-            loading || !fields.title
+          disabled={loading || !fields.title || !fields.brandId || !fields.categoryId}
+          className={`w-full px-6 py-3 rounded-lg font-medium transition-all ${
+            loading || !fields.title || !fields.brandId || !fields.categoryId
               ? "bg-gray-400 text-gray-500 cursor-not-allowed"
               : "bg-gradient-to-r from-cyan-500 to-purple-500 text-white hover:scale-105"
           }`}
