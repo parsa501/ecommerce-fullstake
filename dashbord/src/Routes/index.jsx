@@ -23,7 +23,6 @@ import UpdateCategory from "../Pages/Category/Update";
 import CreateCategory from "../Pages/Category/Create";
 import Slider from "../Pages/Slider";
 import GetAllSlider from "../Pages/Slider/GatAll";
-import UpdateSlider from "../Pages/Slider/Update";
 import CreateSlider from "../Pages/Slider/Create";
 import Variants from "../Pages/Variants";
 import GetAllVariants from "../Pages/Variants/GatAll";
@@ -169,10 +168,6 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <GetAllSlider />,
-          },
-          {
-            path: "update/:id",
-            element: <UpdateSlider />,
           },
           {
             path: "create",
