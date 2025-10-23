@@ -15,8 +15,7 @@ export default function TopBar() {
       </h2>
 
       <div className="text-sm text-gray-300 font-medium tracking-wide">
-        خوش آمدید،{" "}
-        <span className="text-purple-400 font-semibold">مدیر</span>
+        مدیر <span className="text-purple-400 font-semibold"> خوش آمدید. </span>
       </div>
 
       <button

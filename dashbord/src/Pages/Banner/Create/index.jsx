@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function CreateBrands() {
+export default function CreateBanner() {
   return (
     <div>
       

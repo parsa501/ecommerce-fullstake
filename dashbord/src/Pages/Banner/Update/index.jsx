@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function UpdateBrands() {
+export default function UpdateBanner() {
   return (
     <div>
       

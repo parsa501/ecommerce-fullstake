@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function GetAllBrands() {
+export default function GetAllBanner() {
   return (
     <div>
       
