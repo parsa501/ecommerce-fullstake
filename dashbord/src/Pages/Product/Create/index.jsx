@@ -13,6 +13,7 @@ export default function CreateProduct() {
     description: "",
     brandId: "",
     categoryId: "",
+    isPublished: false, // ← اضافه شد
   });
 
   const [brands, setBrands] = useState([]);
@@ -20,7 +21,6 @@ export default function CreateProduct() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // بارگذاری برندها
     (async () => {
       const resBrands = await fetchData("brands", {
         headers: { Authorization: `Bearer ${token}` },
@@ -28,7 +28,6 @@ export default function CreateProduct() {
       if (resBrands.success) setBrands(resBrands.data);
       else Notify("error", resBrands.message);
 
-      // بارگذاری دسته‌بندی‌ها
       const resCategories = await fetchData("category", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -124,6 +123,18 @@ export default function CreateProduct() {
               </option>
             ))}
           </select>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="isPublished"
+            checked={fields.isPublished}
+            onChange={(e) =>
+              handleChange({ target: { name: "isPublished", value: e.target.checked } })
+            }
+          />
+          <span>منتشر شود</span>
         </div>
 
         <button

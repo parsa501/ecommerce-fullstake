@@ -9,32 +9,21 @@ export default function GetAllProduct() {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const loadProducts = async () => {
-    const result = await fetchData("product", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (result.success) setProducts(result.data);
-    else Notify("error", result.message);
-  };
-
-  const handleDelete = async (id) => {
-    const result = await fetchData(`product/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (result.success) {
-      Notify("success", "محصول با موفقیت حذف شد");
-      loadProducts();
-    } else Notify("error", result.message);
-  };
-
   useEffect(() => {
-    loadProducts();
-  }, []);
+    (async () => {
+      const result = await fetchData("product", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (result.success) setProducts(result.data);
+      else Notify("error", result.message);
+    })();
+  }, [token]);
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 text-gray-200"
+      dir="rtl"
+    >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text">
           لیست محصولات
@@ -60,28 +49,29 @@ export default function GetAllProduct() {
                 <th className="px-4 py-2">نام محصول</th>
                 <th className="px-4 py-2">برند</th>
                 <th className="px-4 py-2">دسته‌بندی</th>
+                <th className="px-4 py-2">منتشر شده</th> {/* ← ستون جدید */}
                 <th className="px-4 py-2">عملیات</th>
               </tr>
             </thead>
             <tbody>
               {products.map((p, idx) => (
-                <tr key={p._id} className="border-b border-white/20 hover:bg-white/5 transition">
+                <tr
+                  key={p._id}
+                  className="border-b border-white/20 hover:bg-white/5 transition"
+                >
                   <td className="px-4 py-2">{idx + 1}</td>
                   <td className="px-4 py-2">{p.title}</td>
                   <td className="px-4 py-2">{p?.brandId?.title || "-"}</td>
                   <td className="px-4 py-2">{p?.categoryId?.title || "-"}</td>
+                  <td className="px-4 py-2">
+                    {p.isPublished ? "✅ بله" : "❌ خیر"} {/* ← نمایش وضعیت انتشار */}
+                  </td>
                   <td className="px-4 py-2 flex gap-2">
                     <button
                       onClick={() => navigate(`/product/update/${p._id}`)}
                       className="bg-amber-500 text-black px-3 py-1.5 rounded-lg hover:scale-105 transition"
                     >
                       ویرایش
-                    </button>
-                    <button
-                      onClick={() => handleDelete(p._id)}
-                      className="bg-red-500 text-white px-3 py-1.5 rounded-lg hover:scale-105 transition"
-                    >
-                      حذف
                     </button>
                   </td>
                 </tr>
