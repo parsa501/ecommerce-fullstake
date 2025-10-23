@@ -14,7 +14,7 @@ export const create = catchAsync(async (req, res, next) => {
 
 export const getAll = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(Product, req.query, req.role)
-    .addManualFilters(req.role === "admin" ? {} : { isPublished: true })
+    .addManualFilters(req.role !== "user" ? {} : { isPublished: true })
     .filter()
     .sort()
     .limitFields()
