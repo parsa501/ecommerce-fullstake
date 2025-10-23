@@ -87,11 +87,6 @@ export const remove = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("دسته‌بندی مورد نظر یافت نشد", 404));
   }
 
-  if (category.image) {
-    const imagePath = `${__dirname}/Public/Uploads/${category.image}`;
-    if(fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
-  }
-
   return res.status(200).json({
     success: true,
     message: "دسته‌بندی با موفقیت حذف شد",

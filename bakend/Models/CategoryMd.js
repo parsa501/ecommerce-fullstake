@@ -8,7 +8,7 @@ const categorySchema = new mongoose.Schema(
       unique: [true, "عنوان دسته‌بندی باید یکتا باشد"],
       trim: true,
     },
-    image: {
+    icon: {
       type: String,
       default: "",
     },
