@@ -30,11 +30,9 @@ const addressSchema = new mongoose.Schema(
     },
     lat: {
       type: Number,
-      required: [true, "عرض جغرافیایی الزامی است"],
     },
     lng: {
       type: Number,
-      required: [true, "طول جغرافیایی الزامی است"],
     },
     receiverPhoneNumber: {
       type: String,
