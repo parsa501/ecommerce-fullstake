@@ -17,7 +17,6 @@ export default function GetAllAddress() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("آیا از حذف این آدرس مطمئن هستید؟")) return;
 
     const result = await fetchData(`Address/${id}`, {
       method: "DELETE",
