@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import useFormFields from "../../../Utils/useFormFields";
 import { AuthContext } from "../../../Context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,15 +15,18 @@ export default function UpdateProduct() {
     description: "",
     brandId: "",
     categoryId: "",
-    isPublished: false, // ← اضافه شد
+    isPublished: false,
   });
 
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [images, setImages] = useState([]); // آرایه تصاویر
+  const [previewImages, setPreviewImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const fileRef = useRef();
 
+  // بارگذاری برندها و دسته‌بندی‌ها
   useEffect(() => {
-    // بارگذاری برندها و دسته‌بندی‌ها
     (async () => {
       const resBrands = await fetchData("brands", {
         headers: { Authorization: `Bearer ${token}` },
@@ -37,25 +40,65 @@ export default function UpdateProduct() {
     })();
   }, [token]);
 
+  // بارگذاری داده محصول
   useEffect(() => {
-    // بارگذاری داده محصول برای ویرایش
     (async () => {
       const result = await fetchData(`product/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (result.success) setFields(result.data);
-      else Notify("error", "محصول یافت نشد");
+      if (result.success) {
+        setFields(result.data);
+        if (result.data.images) {
+          setImages(result.data.images);
+          setPreviewImages(result.data.images.map((img) => import.meta.env.VITE_BASE_FILE + img));
+        }
+      } else Notify("error", "محصول یافت نشد");
     })();
   }, [id]);
+
+  const handleNewImages = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+
+    const newPreviews = files.map((f) => URL.createObjectURL(f));
+    setPreviewImages((prev) => [...prev, ...newPreviews]);
+    setImages((prev) => [...prev, ...files]); // ذخیره فایل‌ها یا نام فایل‌های آپلود شده
+  };
+
+  const handleRemoveImage = (idx) => {
+    setPreviewImages((prev) => prev.filter((_, i) => i !== idx));
+    setImages((prev) => prev.filter((_, i) => i !== idx));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      const uploadedImages = [];
+
+      // آپلود تصاویر جدید
+      for (let img of images) {
+        if (typeof img !== "string") {
+          const fd = new FormData();
+          fd.append("file", img);
+          const up = await fetchData("upload", {
+            method: "POST",
+            body: fd,
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          uploadedImages.push(up?.data?.filename);
+        } else {
+          uploadedImages.push(img);
+        }
+      }
+
       const result = await fetchData(`product/${id}`, {
         method: "PATCH",
-        body: JSON.stringify(fields),
+        body: JSON.stringify({
+          ...fields,
+          images: uploadedImages,
+        }),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -64,9 +107,9 @@ export default function UpdateProduct() {
 
       setLoading(false);
       if (result.success) {
-        Notify("success", "محصول با موفقیت ویرایش شد");
+        Notify("success", "محصول با موفقیت بروزرسانی شد");
         navigate("/product");
-      } else Notify("error", result.message || "خطا در ویرایش محصول");
+      } else Notify("error", result.message || "خطا در بروزرسانی محصول");
     } catch (err) {
       setLoading(false);
       Notify("error", err.message || "خطا در ارسال");
@@ -74,7 +117,7 @@ export default function UpdateProduct() {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200" dir="rtl">
+    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-3xl mx-auto text-gray-200" dir="rtl">
       <h2 className="text-2xl font-extrabold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text mb-6">
         ویرایش محصول
       </h2>
@@ -113,9 +156,7 @@ export default function UpdateProduct() {
           >
             <option value="">انتخاب برند</option>
             {brands.map((b) => (
-              <option key={b._id} value={b._id}>
-                {b.title}
-              </option>
+              <option key={b._id} value={b._id}>{b.title}</option>
             ))}
           </select>
         </div>
@@ -130,11 +171,28 @@ export default function UpdateProduct() {
           >
             <option value="">انتخاب دسته‌بندی</option>
             {categories.map((c) => (
-              <option key={c._id} value={c._id}>
-                {c.title}
-              </option>
+              <option key={c._id} value={c._id}>{c.title}</option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium">تصاویر محصول</label>
+          <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleNewImages} className="w-full" />
+          <div className="flex flex-wrap gap-2 mt-2">
+            {previewImages.map((src, idx) => (
+              <div key={idx} className="relative w-28 h-28">
+                <img src={src} alt={`preview-${idx}`} className="w-full h-full object-cover rounded-lg" />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(idx)}
+                  className="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 rounded-br-lg text-xs hover:bg-red-600"
+                >
+                  حذف
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
@@ -142,9 +200,7 @@ export default function UpdateProduct() {
             type="checkbox"
             name="isPublished"
             checked={fields.isPublished}
-            onChange={(e) =>
-              handleChange({ target: { name: "isPublished", value: e.target.checked } })
-            }
+            onChange={(e) => handleChange({ target: { name: "isPublished", value: e.target.checked } })}
           />
           <span>منتشر شود</span>
         </div>

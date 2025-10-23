@@ -14,10 +14,42 @@ export default function GetAllProduct() {
       const result = await fetchData("product", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (result.success) setProducts(result.data);
+      if (result.success) setProducts(result.data || []);
       else Notify("error", result.message);
     })();
   }, [token]);
+
+  const items = products.map((p, idx) => (
+    <tr
+      key={p._id}
+      className="border-b border-white/20 hover:bg-white/5 transition"
+    >
+      <td className="px-4 py-2">{idx + 1}</td>
+      <td className="px-4 py-2">{p.title}</td>
+      <td className="px-4 py-2">{p?.brandId?.title || "-"}</td>
+      <td className="px-4 py-2">{p?.categoryId?.title || "-"}</td>
+      <td className="px-4 py-2">
+        {p.images && p.images.length > 0 ? (
+          <img
+            src={import.meta.env.VITE_BASE_FILE + p.images[0]}
+            alt={p.title}
+            className="w-16 h-16 object-cover rounded-lg"
+          />
+        ) : (
+          <span className="text-gray-400 italic">ندارد</span>
+        )}
+      </td>
+      <td className="px-4 py-2">{p.isPublished ? "✅ بله" : "❌ خیر"}</td>
+      <td className="px-4 py-2 flex gap-2">
+        <button
+          onClick={() => navigate(`/product/update/${p._id}`)}
+          className="bg-amber-500 text-black px-3 py-1.5 rounded-lg hover:scale-105 transition"
+        >
+          ویرایش
+        </button>
+      </td>
+    </tr>
+  ));
 
   return (
     <div
@@ -49,33 +81,21 @@ export default function GetAllProduct() {
                 <th className="px-4 py-2">نام محصول</th>
                 <th className="px-4 py-2">برند</th>
                 <th className="px-4 py-2">دسته‌بندی</th>
-                <th className="px-4 py-2">منتشر شده</th> {/* ← ستون جدید */}
+                <th className="px-4 py-2">تصویر</th>
+                <th className="px-4 py-2">منتشر شده</th>
                 <th className="px-4 py-2">عملیات</th>
               </tr>
             </thead>
             <tbody>
-              {products.map((p, idx) => (
-                <tr
-                  key={p._id}
-                  className="border-b border-white/20 hover:bg-white/5 transition"
-                >
-                  <td className="px-4 py-2">{idx + 1}</td>
-                  <td className="px-4 py-2">{p.title}</td>
-                  <td className="px-4 py-2">{p?.brandId?.title || "-"}</td>
-                  <td className="px-4 py-2">{p?.categoryId?.title || "-"}</td>
-                  <td className="px-4 py-2">
-                    {p.isPublished ? "✅ بله" : "❌ خیر"} {/* ← نمایش وضعیت انتشار */}
-                  </td>
-                  <td className="px-4 py-2 flex gap-2">
-                    <button
-                      onClick={() => navigate(`/product/update/${p._id}`)}
-                      className="bg-amber-500 text-black px-3 py-1.5 rounded-lg hover:scale-105 transition"
-                    >
-                      ویرایش
-                    </button>
+              {products.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-6 text-center text-gray-400">
+                    هنوز هیچ محصولی ثبت نشده است.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                items
+              )}
             </tbody>
           </table>
         </div>

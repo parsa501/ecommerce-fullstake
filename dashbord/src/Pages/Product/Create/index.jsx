@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import useFormFields from "../../../Utils/useFormFields";
 import { AuthContext } from "../../../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -8,18 +8,23 @@ import Notify from "../../../Utils/Notify";
 export default function CreateProduct() {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
+  const fileRef = useRef();
+
   const [fields, handleChange] = useFormFields({
     title: "",
     description: "",
     brandId: "",
     categoryId: "",
-    isPublished: false, // ← اضافه شد
+    isPublished: false,
   });
 
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [images, setImages] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // بارگذاری برندها و دسته‌بندی‌ها
   useEffect(() => {
     (async () => {
       const resBrands = await fetchData("brands", {
@@ -36,25 +41,46 @@ export default function CreateProduct() {
     })();
   }, [token]);
 
+  const handleImage = (e) => {
+    const files = Array.from(e.target.files);
+    setImages(files);
+
+    // پیش‌نمایش تصاویر
+    const previewsArray = files.map((f) => URL.createObjectURL(f));
+    setPreviews(previewsArray);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      // آپلود تصاویر
+      let uploadedImages = [];
+      for (const img of images) {
+        const fd = new FormData();
+        fd.append("file", img);
+        const up = await fetchData("upload", {
+          method: "POST",
+          body: fd,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (up?.success && up?.data?.filename) uploadedImages.push(up.data.filename);
+      }
+
       const result = await fetchData("product", {
         method: "POST",
-        body: JSON.stringify(fields),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        body: JSON.stringify({ ...fields, images: uploadedImages }),
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       });
 
       setLoading(false);
       if (result.success) {
         Notify("success", result.message);
         navigate("/product");
-      } else Notify("error", result.message || "خطا در ثبت محصول");
+      } else {
+        Notify("error", result.message || "خطا در ثبت محصول");
+      }
     } catch (err) {
       setLoading(false);
       Notify("error", err.message || "خطا در ارسال");
@@ -62,7 +88,7 @@ export default function CreateProduct() {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200" dir="rtl">
+    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-3xl mx-auto text-gray-200" dir="rtl">
       <h2 className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text mb-6">
         ثبت محصول جدید
       </h2>
@@ -101,9 +127,7 @@ export default function CreateProduct() {
           >
             <option value="">انتخاب برند</option>
             {brands.map((b) => (
-              <option key={b._id} value={b._id}>
-                {b.title}
-              </option>
+              <option key={b._id} value={b._id}>{b.title}</option>
             ))}
           </select>
         </div>
@@ -118,11 +142,28 @@ export default function CreateProduct() {
           >
             <option value="">انتخاب دسته‌بندی</option>
             {categories.map((c) => (
-              <option key={c._id} value={c._id}>
-                {c.title}
-              </option>
+              <option key={c._id} value={c._id}>{c.title}</option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium">تصاویر محصول</label>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImage}
+            className="w-full"
+          />
+          {previews.length > 0 && (
+            <div className="flex gap-2 mt-2 overflow-x-auto">
+              {previews.map((p, idx) => (
+                <img key={idx} src={p} alt={`preview-${idx}`} className="w-28 h-28 object-cover rounded-lg" />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
@@ -130,9 +171,7 @@ export default function CreateProduct() {
             type="checkbox"
             name="isPublished"
             checked={fields.isPublished}
-            onChange={(e) =>
-              handleChange({ target: { name: "isPublished", value: e.target.checked } })
-            }
+            onChange={(e) => handleChange({ target: { name: "isPublished", value: e.target.checked } })}
           />
           <span>منتشر شود</span>
         </div>
