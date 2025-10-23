@@ -1,11 +1,11 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-export default function Brands() {
+export default function Banner() {
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">مدیریت برندها</h2>
-      <Outlet />
-    </div>
+     <div className="p-6">
+       <h2 className="text-2xl font-bold mb-4">مدیریت بنرها</h2>
+       <Outlet />
+     </div>
   );
 }
