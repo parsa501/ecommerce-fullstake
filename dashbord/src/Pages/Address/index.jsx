@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
+import { Outlet } from "react-router-dom";
 
 export default function Address() {
   return (
-    <div>
-      
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">مدیریت آدرس‌ها</h2>
+      <Outlet />
     </div>
-  )
+  );
 }
