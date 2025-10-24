@@ -7,9 +7,17 @@ export const create = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.userId);
   let rating;
 
-  if (!user.boughtProducts?.find((productId) => productId.toString() === req.body.productId)) {
+  if (
+    !user.boughtProducts?.find(
+      (productId) => productId.toString() === req.body.productId
+    )
+  ) {
     rating = 0;
-  } else if (user?.ratedProducts?.find((productId) => productId.toString() === req.body.productId)) {
+  } else if (
+    user?.ratedProducts?.find(
+      (productId) => productId.toString() === req.body.productId
+    )
+  ) {
     return next(new HandleERROR("شما قبلاً به این محصول امتیاز داده‌اید", 400));
   } else {
     rating = req.body?.rating || 0;
@@ -24,7 +32,8 @@ export const create = catchAsync(async (req, res, next) => {
 
   if (rating >= 1) {
     const product = await Product.findById(req.body.productId);
-    product.rating = (product.rating * product.rateCount + rating) / (product.rateCount + 1);
+    product.rating =
+      (product.rating * product.rateCount + rating) / (product.rateCount + 1);
     product.rateCount += 1;
     await product.save();
   }
@@ -90,16 +99,21 @@ export const changePublish = catchAsync(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     data: comment,
-    message: comment.isPublished ? "کامنت منتشر شد" : "کامنت از حالت انتشار خارج شد",
+    message: comment.isPublished
+      ? "کامنت منتشر شد"
+      : "کامنت از حالت انتشار خارج شد",
   });
 });
 
 export const remove = catchAsync(async (req, res, next) => {
-  const comment = await Comment.findById(req.params.id);
+  const { id } = req.params;
+
+  const comment = await Comment.findById(id);
   if (!comment) {
     return next(new HandleERROR("کامنت یافت نشد", 404));
   }
-  await comment.remove();
+
+  await Comment.findByIdAndDelete(id);
 
   return res.status(200).json({
     success: true,

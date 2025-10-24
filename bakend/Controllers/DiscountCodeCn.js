@@ -73,8 +73,8 @@ export const update = catchAsync(async (req, res, next) => {
 
 export const remove = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  const discountCode = await DiscountCode.findById(id);
 
+  const discountCode = await DiscountCode.findById(id);
   if (!discountCode) {
     return next(new HandleERROR("کد تخفیف یافت نشد", 404));
   }
@@ -85,13 +85,14 @@ export const remove = catchAsync(async (req, res, next) => {
     );
   }
 
-  await discountCode.remove();
+  await DiscountCode.findByIdAndDelete(id);
 
   return res.status(200).json({
     success: true,
     message: "کد تخفیف با موفقیت حذف شد",
   });
 });
+
 
 export const checkCode = (discount, totalPrice, userId) => {
   if (!discount?.isPublish)
