@@ -16,7 +16,7 @@ export default function GetAllReport() {
 
   useEffect(() => {
     (async () => {
-      const result = await fetchData("reports/sales", {
+      const result = await fetchData("report", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

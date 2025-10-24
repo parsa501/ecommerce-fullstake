@@ -20,7 +20,7 @@ export default function UpdateUser() {
     role: "user",
   });
 
-  const [initialData, setInitialData] = useState(null); // 🟢 برای مقداردهی اولیه
+  const [initialData, setInitialData] = useState(null);
 
   useEffect(() => {
     let mounted = true;
@@ -65,7 +65,6 @@ export default function UpdateUser() {
     return () => (mounted = false);
   }, [id, token]);
 
-  // 🟢 پر کردن فرم زمانی که داده آماده شد
   useEffect(() => {
     if (initialData) {
       const fakeEvent = (name, value) => ({
@@ -80,7 +79,8 @@ export default function UpdateUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.username.trim()) return notify("error", "نام کاربری الزامی است");
+    if (!form.username.trim())
+      return notify("error", "نام کاربری الزامی است");
     if (!form.phoneNumber.trim())
       return notify("error", "شماره تلفن الزامی است");
 
@@ -115,7 +115,7 @@ export default function UpdateUser() {
   };
 
   return (
-    <div className="p-8 mx-16 bg-white/10 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 mt-6">
+    <div className="p-8 mx-16 bg-white/10 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 mt-6" dir="rtl">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-100">ویرایش کاربر</h2>
         <button
@@ -128,7 +128,6 @@ export default function UpdateUser() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* USERNAME */}
         <div>
           <label className="block text-sm text-gray-300 mb-2">نام کاربری</label>
           <input
@@ -136,12 +135,11 @@ export default function UpdateUser() {
             value={form.username}
             onChange={handleChange}
             className="w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-            placeholder="username"
+            placeholder="نام کاربری"
             required
           />
         </div>
 
-        {/* EMAIL */}
         <div>
           <label className="block text-sm text-gray-300 mb-2">ایمیل</label>
           <input
@@ -154,7 +152,6 @@ export default function UpdateUser() {
           />
         </div>
 
-        {/* PHONE */}
         <div>
           <label className="block text-sm text-gray-300 mb-2">شماره تلفن</label>
           <input
@@ -167,7 +164,6 @@ export default function UpdateUser() {
           />
         </div>
 
-        {/* PASSWORD */}
         <div>
           <label className="block text-sm text-gray-300 mb-2">رمز جدید</label>
           <input
@@ -180,23 +176,22 @@ export default function UpdateUser() {
           />
         </div>
 
-        {/* ROLE */}
         <div>
           <label className="block text-sm text-gray-300 mb-2">نقش</label>
           <select
             name="role"
             value={form.role}
             onChange={handleChange}
-            disabled={me?.role !== "superAdmin"} // ✅ برعکس شد
+            disabled={me?.role !== "superAdmin"}
             className={`w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-gray-100 focus:outline-none ${
               me?.role === "superAdmin"
                 ? "focus:ring-2 focus:ring-emerald-400"
                 : "opacity-60 cursor-not-allowed"
             }`}
           >
-            <option value="user">user</option>
-            <option value="admin">admin</option>
-            <option value="superAdmin">superAdmin</option>
+            <option value="user">کاربر</option>
+            <option value="admin">ادمین</option>
+            <option value="superAdmin">سوپر ادمین</option>
           </select>
           {me?.role !== "superAdmin" && (
             <p className="text-xs text-gray-400 mt-1">
@@ -205,7 +200,6 @@ export default function UpdateUser() {
           )}
         </div>
 
-        {/* BUTTONS */}
         <div className="flex justify-end gap-4">
           <button
             type="button"

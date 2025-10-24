@@ -93,7 +93,7 @@ export const update = catchAsync(async (req, res, next) => {
     user.email = email;
   }
 
-  if (req.role === "superAdmin" && role) {
+  if (req.role === "superAdmin") {
     user.role = role;
   }
 

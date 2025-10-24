@@ -13,12 +13,10 @@ export default function GetAllUser() {
     let mounted = true;
     (async () => {
       if (!token) {
-        if (mounted) {
-          setUsers([]);
-        }
+        if (mounted) setUsers([]);
         return;
       }
-const res = await fetchData("users?limit=1000", {
+      const res = await fetchData("users?limit=1000", {
         method: "GET",
         headers: { authorization: `Bearer ${token}` },
       });
@@ -44,18 +42,18 @@ const res = await fetchData("users?limit=1000", {
   };
 
   return (
-    <div className="p-8 bg-white/10 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 mt-6">
+    <div className="p-8 bg-white/10 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 mt-6" dir="rtl">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-emerald-500">
-            Users
+            کاربران
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6">
           {users.length === 0 && (
             <div className="col-span-full text-center text-gray-300 py-8 bg-white/2 rounded-2xl">
-              No users found. Create your first user.
+              کاربری یافت نشد. اولین کاربر خود را ثبت کنید.
             </div>
           )}
 
@@ -78,18 +76,18 @@ const res = await fetchData("users?limit=1000", {
                       {user?.username}
                     </h3>
                     <span className="text-xs text-gray-300 px-3 py-1 rounded-full bg-white/5">
-                      {user?.role || "user"}
+                      {user?.role || "کاربر"}
                     </span>
                   </div>
                   <p className="text-sm text-gray-300 mt-2 line-clamp-2">
-                    {user?.email || "No email provided"}
+                    {user?.email || "ایمیلی ثبت نشده است"}
                   </p>
                 </div>
               </div>
 
               <div className="mt-6 flex items-center justify-between gap-3">
                 <div className="text-sm text-gray-400">
-                  <span className="block">ID</span>
+                  <span className="block">شناسه</span>
                   <span className="text-xs text-gray-500">{user._id}</span>
                 </div>
 
@@ -100,7 +98,7 @@ const res = await fetchData("users?limit=1000", {
                     className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 text-gray-100 hover:bg-white/6 transition"
                   >
                     <FaEdit />
-                    <span className="hidden sm:inline">Edit</span>
+                    <span className="hidden sm:inline">ویرایش</span>
                   </button>
                 </div>
               </div>
