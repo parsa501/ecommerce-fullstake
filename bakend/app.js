@@ -58,7 +58,7 @@ app.use("/api/report", isAdmin, reportRouter);
 app.use("/api/faq", faqRouter);
 app.use("/api/testimonial", testimonialRouter);
 app.use("/api/user-question", userQuestionRouter);
-app.use("/api/serach", searchrouter);
+app.use("/api/search", searchrouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use((req, res, next) => {

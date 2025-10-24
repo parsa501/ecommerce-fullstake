@@ -2,95 +2,124 @@ import React, { useEffect, useRef, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import fetchData from "../../../Utils/fetchData";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function SearchBar({ value, onChange, placeholder }) {
   const [filteredResults, setFilteredResults] = useState([]);
   const navigate = useNavigate();
   const wrapperRef = useRef();
+  const controllerRef = useRef(null);
+  const { token } = useSelector((state) => state.auth);
 
+  // بستن لیست نتایج وقتی بیرون کلیک می‌شود
   useEffect(() => {
-    function handleClickOutside(event) {
+    const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setFilteredResults([]);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // تابع جستجو با debounce و لغو درخواست قبلی
   useEffect(() => {
-    if (!value) {
+    if (!value || value.trim().length < 2) {
       setFilteredResults([]);
       return;
     }
 
-    (async () => {
-      const categoryRes = await fetchData(
-        `categories?filters[title][$containsi]=${value}&populate=*`
-      );
-      const productRes = await fetchData(
-        `products?filters[name][$containsi]=${value}&populate=*`
-      );
-      const categories = categoryRes?.data || [];
-      const products = productRes?.data || [];
+    // لغو درخواست قبلی
+    if (controllerRef.current) controllerRef.current.abort();
+    controllerRef.current = new AbortController();
 
-      setFilteredResults([...categories, ...products]);
-    })();
+    const fetchSearch = async () => {
+      const res = await fetchData("search", {
+        method: "POST",
+        body: JSON.stringify({
+          keyword: value,
+          type: "all",
+          page: 1,
+          limit: 10,
+          sort: "-createdAt",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+console.log(res)
+      if (res?.success && res?.data) {
+        const allResults = [
+          ...(res.data["محصولات"] || []),
+          ...(res.data["دسته‌بندی‌ها"] || []),
+          ...(res.data["برندها"] || []),
+        ];
+        setFilteredResults(allResults);
+      } else {
+        setFilteredResults([]);
+      }
+    };
+
+    const delayDebounce = setTimeout(fetchSearch, 500);
+    return () => clearTimeout(delayDebounce);
   }, [value]);
 
   return (
-    <div className="relative w-full z-[1000]" ref={wrapperRef}>
+    <div className="relative w-full z-[1000]" ref={wrapperRef} dir="rtl">
+      {/* فرم جستجو */}
       <form
-        className="relative w-full h-[48px] bg-[#F3F9FB] flex flex-row rounded-[10px]"
+        className="relative w-full h-[48px] bg-[#F3F9FB] flex flex-row rounded-[10px] overflow-hidden"
         onSubmit={(e) => e.preventDefault()}
       >
         <input
-          className="text-[14px] w-full h-full p-4 px-8 rounded-[10px]"
           type="text"
-          placeholder={
-            placeholder || "Search essentials, groceries and more..."
-          }
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder || "جستجو میان محصولات، برندها و دسته‌ها..."}
+          className="text-[14px] w-full h-full p-4 pr-10 focus:outline-none bg-[#F3F9FB]"
         />
-        <div className="absolute top-[33%] left-2 text-black font-extrabold">
+        <div className="absolute top-[33%] right-3 text-gray-700 font-extrabold">
           <CiSearch className="text-[18px]" />
         </div>
       </form>
 
+      {/* لیست نتایج */}
       {value && filteredResults.length > 0 && (
-        <ul className="absolute top-full mt-2 bg-white w-full shadow-md rounded-[10px] z-10 max-h-[300px] overflow-y-auto">
+        <ul className="absolute top-full mt-2 bg-white w-full shadow-lg rounded-[10px] z-10 max-h-[300px] overflow-y-auto border border-gray-100">
           {filteredResults.map((item, index) => {
             const imageUrl =
-              item?.image?.[0]?.url || item?.images?.[0]?.url || null;
-            const isCategory = !!item?.title;
-            const nameOrTitle = item?.title || item?.name;
-            const documentId = item?.documentId;
+              item?.image || (item?.images?.length ? item.images[0] : null);
+            const title = item?.title || item?.name;
+            const documentId = item?._id;
+
+            // تشخیص نوع آیتم
+            const isProduct = !!item?.productVariantIds;
+            const isBrand = !!item?.isPublished && !item?.productVariantIds;
+            const isCategory = !!item?.categoryId && !isProduct;
 
             return (
               <li
                 key={index}
                 onClick={() => {
-                  navigate(
-                    isCategory
-                      ? `/category-details/${documentId}/${nameOrTitle}`
-                      : `/products-details/${documentId}/${nameOrTitle}`
-                  );
+                  if (isProduct)
+                    navigate(`/products-details/${documentId}/${title}`);
+                  else if (isCategory)
+                    navigate(`/category-details/${documentId}/${title}`);
+                  else if (isBrand) navigate(`/brands/${documentId}/${title}`);
                   onChange("");
                   setFilteredResults([]);
                 }}
-                className="p-2 border-b border-gray-200 last:border-none cursor-pointer bg-gray-100 hover:bg-gray-300 flex items-center"
+                className="p-2 border-b border-gray-100 last:border-none cursor-pointer bg-gray-50 hover:bg-gray-200 transition flex items-center gap-2"
               >
                 {imageUrl && (
                   <img
                     src={`${import.meta.env.VITE_BASE_FILE}${imageUrl}`}
-                    alt={nameOrTitle}
-                    className="w-10 h-10 object-fill rounded mr-2"
+                    alt={title}
+                    className="w-10 h-10 object-cover rounded-md"
                   />
                 )}
-                {nameOrTitle}
+                <span className="text-[14px]">{title}</span>
               </li>
             );
           })}
