@@ -39,7 +39,6 @@ import CreateProductVariants from "../Pages/ProductVariants/Create";
 import Comments from "../Pages/Comments";
 import GetAllComments from "../Pages/Comments/GatAll";
 import UpdateComments from "../Pages/Comments/Update";
-import CreateComments from "../Pages/Comments/Create";
 import Discount from "../Pages/Discount";
 import GetAllDiscount from "../Pages/Discount/GatAll";
 import UpdateDiscount from "../Pages/Discount/Update";
@@ -241,10 +240,7 @@ const router = createBrowserRouter([
             path: "update/:id",
             element: <UpdateComments />,
           },
-          {
-            path: "create",
-            element: <CreateComments />,
-          },
+         
         ],
       },
       {
