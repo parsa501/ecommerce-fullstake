@@ -46,7 +46,6 @@ import CreateDiscount from "../Pages/Discount/Create";
 import Orders from "../Pages/Orders";
 import GetAllOrders from "../Pages/Orders/GatAll";
 import UpdateOrders from "../Pages/Orders/Update";
-import CreateOrders from "../Pages/Orders/Create";
 import FAQ from "../Pages/FAQ";
 import GetAllFAQ from "../Pages/FAQ/GatAll";
 import UpdateFAQ from "../Pages/FAQ/Update";
@@ -273,10 +272,7 @@ const router = createBrowserRouter([
             path: "update/:id",
             element: <UpdateOrders />,
           },
-          {
-            path: "create",
-            element: <CreateOrders />,
-          },
+         
         ],
       },
       {
