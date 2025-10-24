@@ -18,7 +18,6 @@ export default function GetAllComments() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("آیا از حذف این کامنت مطمئن هستید؟")) return;
 
     const result = await fetchData(`comments/${id}`, {
       method: "DELETE",
