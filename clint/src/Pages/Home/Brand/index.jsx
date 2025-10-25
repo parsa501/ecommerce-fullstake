@@ -8,7 +8,6 @@ import { Autoplay, Navigation } from "swiper/modules";
 // Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
-
 import "swiper/css/navigation";
 import BrandSkeleton from "./BrandSkelton";
 
@@ -17,8 +16,9 @@ export default function Brand() {
 
   useEffect(() => {
     (async () => {
-      const response = await fetchData("brands?populate=*");
+      const response = await fetchData("brands");
       setBrand(response?.data);
+      console.log(response);
     })();
   }, []);
 
@@ -26,20 +26,21 @@ export default function Brand() {
     <SwiperSlide key={index}>
       <div className="bg-gray-100 w-full h-full flex items-center justify-center rounded-xl p-4">
         <img
-          src={import.meta.env.VITE_BASE_FILE + e.image.url}
-          alt={e.image.name || "brand logo"}
-          className="w-full h-full object-fill rounded-xl "
+          src={import.meta.env.VITE_BASE_FILE + e.image}
+          alt={e.title || "لوگوی برند"}
+          className="w-full h-full object-fill rounded-xl"
         />
       </div>
     </SwiperSlide>
   ));
+
   if (!brand) {
     return <BrandSkeleton />;
   }
 
   return (
-    <div className="w-[90%] mx-auto  rounded-xl mt-8">
-      <h2 className="text-[34px]  font-bold mb-6 ">SHOP BY BRANDS</h2>
+    <div className="w-[90%] mx-auto rounded-xl mt-8" dir="rtl">
+      <h2 className="text-[34px] font-bold mb-6 text-right">خرید بر اساس برند</h2>
       <Swiper
         modules={[Autoplay, Navigation]}
         spaceBetween={30}
