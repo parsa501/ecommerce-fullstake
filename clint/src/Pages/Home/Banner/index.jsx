@@ -13,15 +13,16 @@ export default function Banner() {
 
   useEffect(() => {
     (async () => {
-      const response = await fetchData("sliders?populate=*");
+      const response = await fetchData("slider");
       setImg(response?.data);
+      console.log(response)
     })();
   }, []);
 
   const items = img?.map((e, index) => (
     <SwiperSlide key={index}>
       <img
-        src={import.meta.env.VITE_BASE_FILE + e?.image?.url}
+        src={import.meta.env.VITE_BASE_FILE + e?.image}
         alt={e?.image?.name || "slider image"}
         className="w-full h-full object-cover rounded-xl"
       />
