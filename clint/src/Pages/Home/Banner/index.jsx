@@ -35,7 +35,7 @@ export default function Banner() {
   return (
     <div className="w-[90%]  h-[200px] sm:h-[300px] md:h-[360px] lg:h-[420px] mx-auto mt-6 relative">
       <Swiper
-        navigation={{ nextEl: ".custom-next", prevEl: ".custom-prev" }}
+        navigation={{ prevEl: ".custom-next",nextEl: ".custom-prev" }}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         pagination={true}
         modules={[Navigation, Autoplay, Pagination]}
