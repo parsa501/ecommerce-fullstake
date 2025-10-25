@@ -148,7 +148,7 @@ export default function NavbarFa() {
           onClick={() => navigate("/category")}
           className="text-[14px] flex items-center gap-1 bg-black text-white py-2 px-4 rounded-[18px] hover:bg-gray-800 transition"
         >
-          مواد غذایی <FaAngleDown />
+       دسته‌بندی‌ها <FaAngleDown />
         </button>
         <button
           onClick={() => navigate("/products")}
