@@ -18,21 +18,24 @@ export const getAll = catchAsync(async (req, res, next) => {
     .filter()
     .sort()
     .limitFields()
-    .paginate()
-    .populate([
-      { path: "categoryId", select: "title" },
-      { path: "brandId", select: "title" },
-      { path: "defaultProductVariantId", populate: { path: "variantId" } },
-    ]);
+    .paginate();
 
-  const result = await features.execute();
+  let result = await features.execute();
+
+  result.data = await Product.populate(result.data, [
+    { path: "categoryId", select: "title" },
+    { path: "brandId", select: "title" },
+    { path: "defaultProductVariantId", select: "price discount priceAfterDiscount" },
+  ]);
 
   return res.status(200).json({
     success: true,
     message: "لیست محصولات با موفقیت دریافت شد",
-    ...result,
+    count: result.count,
+    data: result.data,
   });
 });
+
 
 export const getOne = catchAsync(async (req, res, next) => {
   const { id } = req.params;

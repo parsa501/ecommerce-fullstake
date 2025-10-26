@@ -33,6 +33,10 @@ export const getAll = catchAsync(async (req, res, next) => {
     .populate([{ path: "variantId" },{path:"productId"}]);
 
   const result = await features.execute();
+  result.data = await ProductVariant.populate(result.data, [
+  { path: 'productId' },
+  { path: 'variantId' }
+]);
   return res.status(200).json({
     success: true,
     message: "لیست واریانت‌های محصول با موفقیت دریافت شد",
