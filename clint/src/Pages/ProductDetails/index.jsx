@@ -12,24 +12,24 @@ import { motion } from "framer-motion";
 export default function ProductDetails() {
   const [product, setProduct] = useState();
   const [selectedImage, setSelectedImage] = useState(null);
-  const { documentId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cartQuantity =
     useSelector((state) =>
-      state.cart.items.find((item) => item.documentId === product?.documentId)
+      state.cart.items.find((item) => item.id === product?.id)
     )?.cartQuantity || 0;
 
   useEffect(() => {
     (async () => {
-      const response = await fetchData(`products/${documentId}?populate=*`);
+      const response = await fetchData(`product/${id}`);
       const data = response?.data;
       setProduct(data);
       if (data?.images?.length > 0) {
         setSelectedImage(data.images[0].url);
       }
     })();
-  }, [documentId]);
+  }, [id]);
 
   if (!product) return <Loading />;
 
@@ -143,7 +143,7 @@ export default function ProductDetails() {
             <div className="mt-6 flex items-center gap-6">
               <motion.button
                 whileTap={{ scale: 0.9, rotate: -10 }}
-                onClick={() => dispatch(removeItem(product.documentId))}
+                onClick={() => dispatch(removeItem(product.id))}
                 className="bg-red-500 text-white w-20 h-10 rounded-xl font-bold text-xl shadow-md hover:bg-red-600 transition duration-200"
               >
                 −
