@@ -30,13 +30,13 @@ export const getAll = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate()
-    .populate([{ path: "variantId" },{path:"productId"}]);
+    .populate([{ path: "variantId" }, { path: "productId" }]);
 
   const result = await features.execute();
   result.data = await ProductVariant.populate(result.data, [
-  { path: 'productId' },
-  { path: 'variantId' }
-]);
+    { path: "productId" },
+    { path: "variantId" },
+  ]);
   return res.status(200).json({
     success: true,
     message: "لیست واریانت‌های محصول با موفقیت دریافت شد",
@@ -71,8 +71,7 @@ export const update = catchAsync(async (req, res, next) => {
     if (product) {
       const newPrice = price ?? product.price;
       const newDiscount = discount ?? product.discount;
-      req.body.priceAfterDiscount =
-        newPrice - (newPrice * newDiscount) / 100;
+      req.body.priceAfterDiscount = newPrice - (newPrice * newDiscount) / 100;
     }
   }
 
@@ -91,7 +90,6 @@ export const update = catchAsync(async (req, res, next) => {
     data: productVariant,
   });
 });
-
 
 export const remove = catchAsync(async (req, res, next) => {
   const { id } = req.params;
