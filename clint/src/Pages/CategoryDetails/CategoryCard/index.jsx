@@ -25,7 +25,7 @@ export default function CategoryCard({
       onClick={() =>
         navigate(`/products-details/${id}/${title.replaceAll(" ", "-")}`)
       }
-      className="group relative flex flex-col w-[420px] mb-8 cursor-pointer bg-white rounded-3xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300"
+      className="group relative flex flex-col w-[380px] mb-8 cursor-pointer bg-white rounded-3xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300"
     >
       {/* تصویر محصول */}
       <div className="relative w-full h-[280px] rounded-t-3xl overflow-hidden">
