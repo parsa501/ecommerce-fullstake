@@ -1,87 +1,78 @@
-import { Line } from "rc-progress";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import StarRatings from "react-star-ratings";
 
 export default function CategoryCard({
-  name,
-  price,
+  title,
+  brandId,
+  categoryId,
+  description,
   rating,
   img,
-  offer,
-  documentId,
+  id,
 }) {
+  const navigate = useNavigate();
   const percent = (rating / 5) * 100;
-
   const fillColor = rating > 3 ? "#397CFF" : "#FF4853";
   const backgroundColor = rating > 3 ? "#CFDFFF" : "#FFD6D8";
 
-  const discountedPrice = offer
-    ? (price - (price * offer) / 100).toFixed(2)
-    : price;
-  const navigate = useNavigate();
+  const truncatedTitle = title?.split(" ").slice(0, 5).join(" ") + (title?.split(" ").length > 5 ? " ..." : "");
+  const truncatedDescription = description?.split(" ").slice(0, 12).join(" ") + (description?.split(" ").length > 12 ? " ..." : "");
+
   return (
     <div
+      dir="rtl"
       onClick={() =>
-        navigate(`/products-details/${documentId}/${name.replaceAll(" ", "-")}`)
+        navigate(`/products-details/${id}/${title.replaceAll(" ", "-")}`)
       }
-      className="flex flex-col w-[290px] "
+      className="group relative flex flex-col w-[420px] mb-8 cursor-pointer bg-white rounded-3xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300"
     >
-      <div className="relative w-[100%] h-[340px] flex items-center justify-center bg-[#FAFAFA] rounded-[28px]">
+      {/* تصویر محصول */}
+      <div className="relative w-full h-[280px] rounded-t-3xl overflow-hidden">
         <img
-          className="rounded-[26px] bg-[#ECEDEF] w-[96%] h-[96%]"
           src={img}
-          alt={name}
+          alt={title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-
-        <span className="absolute top-2 left-2 flex items-center justify-center font-medium text-white px-4 py-3 gap-[10px] w-[58px] h-[38px] bg-[#FCBD01] rounded-[24px_0px]">
-          {offer}%
+        <span className="absolute top-3 left-3 bg-[#FCBD01] px-3 py-1 rounded-full text-sm font-bold text-white shadow-md">
+          {brandId}
         </span>
       </div>
 
-      <div className="mt-2">
-        <div
-          className={`${
-            rating > 3 ? "text-[#397CFF]" : "text-[#FF4853]"
-          } text-sm flex items-center  mb-2`}
-        >
+      {/* محتوا */}
+      <div className="p-4 flex flex-col gap-2">
+        <h3 className="font-bold text-lg">{truncatedTitle}</h3>
+        <p className="text-gray-500 text-sm">{truncatedDescription}</p>
+        <p className="text-gray-400 text-xs">دسته‌بندی: {categoryId}</p>
+
+        {/* امتیاز */}
+        <div className="flex items-center justify-between mt-2">
           <StarRatings
             rating={rating}
             starRatedColor="#FCBD01"
             numberOfStars={5}
-            starDimension="22px"
+            starDimension="18px"
             starSpacing="2px"
             name="rating"
-          />{" "}
-          -- ({rating * 500} , users)
+          />
+          <span className="text-gray-500 text-xs">
+            ({Math.round(rating * 200).toLocaleString("fa-IR")} کاربر)
+          </span>
         </div>
-        <div
-          style={{
-            width: "100%",
-            backgroundColor: backgroundColor,
-            borderRadius: "100px",
-          }}
-        >
-          <Line
-            percent={percent}
-            strokeWidth={4}
-            strokeColor={fillColor}
-            trailColor={backgroundColor}
-            strokeLinecap="round"
+
+        {/* نوار پیشرفت */}
+        <div className="mt-2 w-full h-2 rounded-full bg-gray-200 overflow-hidden">
+          <div
+            style={{ width: `${percent}%`, backgroundColor: fillColor }}
+            className="h-full transition-all duration-500"
           />
         </div>
+
+        {/* دکمه خرید */}
+        <button className="mt-4 w-full py-3 bg-[#232321] hover:bg-[#1a1a1a] text-white font-medium rounded-lg transition-colors duration-300">
+          خرید محصول
+        </button>
       </div>
-
-      <h3 className="font-bold mt-2 text-[20px]">
-        {name.split(" ").slice(0, 3).join(" ")}
-      </h3>
-
-      <button className="mt-4 w-full h-14 cursor-pointer bg-[#232321] rounded-[8px] text-white text-[16px] font-medium flex items-center justify-center gap-2">
-        BUY NOW –<span className="text-[#FFA52F]">${discountedPrice}</span>
-        {offer && (
-          <span className="line-through text-sm text-gray-400">(${price})</span>
-        )}
-      </button>
     </div>
   );
 }
