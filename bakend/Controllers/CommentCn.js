@@ -68,7 +68,7 @@ export const getAll = catchAsync(async (req, res, next) => {
 export const getAllPostComments = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(Comment, req.query, req.role)
     .addManualFilters(
-      req.role === "admin"
+      req.role !== "user"
         ? { productId: req.params.id }
         : { isPublished: true, productId: req.params.id }
     )
@@ -82,7 +82,7 @@ export const getAllPostComments = catchAsync(async (req, res, next) => {
     ]);
 
   const result = await features.execute();
-  
+
   return res.status(200).json({
     success: true,
     data: result,

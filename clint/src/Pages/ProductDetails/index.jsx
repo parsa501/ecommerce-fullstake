@@ -7,6 +7,7 @@ import { FiShare2 } from "react-icons/fi";
 import StarRatings from "react-star-ratings";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
+import Comment from "./comments";
 
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
@@ -224,6 +225,9 @@ export default function ProductDetails() {
             </button>
           )}
         </div>
+      </div>
+      <div className="mt-12 border border-gray-200 p-8 rounded-2xl">
+        <Comment productId={id}/>
       </div>
     </div>
   );
