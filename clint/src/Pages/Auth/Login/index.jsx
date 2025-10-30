@@ -18,27 +18,27 @@ export default function Login({ handlePageType }) {
 
   const formik = useFormik({
     initialValues: {
-      identifier: "",
+      email: "",
       password: "",
     },
     validationSchema: Yup.object({
-      identifier: Yup.string().required("Username or Email is required"),
+      email: Yup.string().required("Username or Email is required"),
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: async (values, { setSubmitting, setErrors }) => {
-      const res = await fetchData("auth/local", {
+      const res = await fetchData("auth/login-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
 
-      if (res?.jwt) {
-        dispatch(login({ token: res.jwt, user: res.user }));
+      if (res?.data?.token) {
+        dispatch(login({ token:res.data.token, user: res.data.user }));
         Notify("success", "Logged in successfully");
         navigate("/");
       } else {
         Notify("error", res?.error?.message || "Login failed");
-        setErrors({ identifier: res?.error?.message });
+        setErrors({ email: res?.error?.message });
       }
 
       setSubmitting(false);
@@ -106,14 +106,14 @@ export default function Login({ handlePageType }) {
               <h3 className="text-[23px] mb-3 font-bold">Email or Username</h3>
               <input
                 type="text"
-                name="identifier"
+                name="email"
                 placeholder="Username or Email"
                 className="w-full bg-gray-100 border border-gray-300 focus:border-[#0144fc] focus:ring-2 focus:ring-[#0144fc] text-black text-lg px-6 py-4 rounded-2xl transition-all outline-none"
-                {...formik.getFieldProps("identifier")}
+                {...formik.getFieldProps("email")}
               />
-              {formik.touched.identifier && formik.errors.identifier && (
+              {formik.touched.email && formik.errors.email && (
                 <div className="text-red-500 text-[16px] mt-1">
-                  {formik.errors.identifier}
+                  {formik.errors.email}
                 </div>
               )}
             </div>
