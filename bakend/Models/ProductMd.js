@@ -66,14 +66,14 @@ const productSchema = new mongoose.Schema(
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Variant",
+          ref: "ProductVariant",
         },
       ],
       default: [],
     },
     defaultProductVariantId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Variant",
+      ref: "ProductVariant",
     },
     isPublished: {
       type: Boolean,
