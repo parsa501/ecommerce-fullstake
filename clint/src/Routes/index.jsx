@@ -13,6 +13,7 @@ import Category from "../pages/Category";
 import CategoryDetails from "../pages/CategoryDetails";
 import UserQuestions from "../pages/UserQuestions";
 import Addresses from "../pages/Addresses";
+import Order from "../pages/Order";
 
 const router = createBrowserRouter([
   {
@@ -76,6 +77,16 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Addresses />,
+          },
+        ],
+      },
+      {
+        path: "/order",
+        element: <Private />,
+        children: [
+          {
+            index: true,
+            element: <Order />,
           },
         ],
       },
