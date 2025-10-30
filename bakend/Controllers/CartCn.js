@@ -75,7 +75,9 @@ export const addItem = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("شناسه نوع محصول الزامی است", 400));
   }
 
-  const productVariant = await ProductVariant.findById(productVariantId).populate("productId");
+  const productVariant = await ProductVariant.findById(
+    productVariantId
+  ).populate("productId");
   if (!productVariant) {
     return next(new HandleERROR("نوع محصول یافت نشد", 404));
   }

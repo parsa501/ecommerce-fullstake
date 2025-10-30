@@ -42,7 +42,7 @@ export default function DealsOfCard({
             rating > 3 ? "text-[#397CFF]" : "text-[#FF4853]"
           } text-sm`}
         >
-           کیفیت و امتیاز کالا  :{rating} 
+          کیفیت و امتیاز کالا :{rating}
         </p>
         <div
           style={{

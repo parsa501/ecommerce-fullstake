@@ -20,12 +20,11 @@ export default function UpdateProduct() {
 
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [images, setImages] = useState([]); // آرایه تصاویر
+  const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const fileRef = useRef();
 
-  // بارگذاری برندها و دسته‌بندی‌ها
   useEffect(() => {
     (async () => {
       const resBrands = await fetchData("brands", {
@@ -40,7 +39,6 @@ export default function UpdateProduct() {
     })();
   }, [token]);
 
-  // بارگذاری داده محصول
   useEffect(() => {
     (async () => {
       const result = await fetchData(`product/${id}`, {
@@ -50,7 +48,11 @@ export default function UpdateProduct() {
         setFields(result.data);
         if (result.data.images) {
           setImages(result.data.images);
-          setPreviewImages(result.data.images.map((img) => import.meta.env.VITE_BASE_FILE + img));
+          setPreviewImages(
+            result.data.images.map(
+              (img) => import.meta.env.VITE_BASE_FILE + img
+            )
+          );
         }
       } else Notify("error", "محصول یافت نشد");
     })();
@@ -62,7 +64,7 @@ export default function UpdateProduct() {
 
     const newPreviews = files.map((f) => URL.createObjectURL(f));
     setPreviewImages((prev) => [...prev, ...newPreviews]);
-    setImages((prev) => [...prev, ...files]); // ذخیره فایل‌ها یا نام فایل‌های آپلود شده
+    setImages((prev) => [...prev, ...files]);
   };
 
   const handleRemoveImage = (idx) => {
@@ -77,7 +79,6 @@ export default function UpdateProduct() {
     try {
       const uploadedImages = [];
 
-      // آپلود تصاویر جدید
       for (let img of images) {
         if (typeof img !== "string") {
           const fd = new FormData();
@@ -117,7 +118,10 @@ export default function UpdateProduct() {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-3xl mx-auto text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-3xl mx-auto text-gray-200"
+      dir="rtl"
+    >
       <h2 className="text-2xl font-extrabold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text mb-6">
         ویرایش محصول
       </h2>
@@ -156,7 +160,9 @@ export default function UpdateProduct() {
           >
             <option value="">انتخاب برند</option>
             {brands.map((b) => (
-              <option key={b._id} value={b._id}>{b.title}</option>
+              <option key={b._id} value={b._id}>
+                {b.title}
+              </option>
             ))}
           </select>
         </div>
@@ -171,18 +177,31 @@ export default function UpdateProduct() {
           >
             <option value="">انتخاب دسته‌بندی</option>
             {categories.map((c) => (
-              <option key={c._id} value={c._id}>{c.title}</option>
+              <option key={c._id} value={c._id}>
+                {c.title}
+              </option>
             ))}
           </select>
         </div>
 
         <div>
           <label className="block mb-1 text-sm font-medium">تصاویر محصول</label>
-          <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleNewImages} className="w-full" />
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleNewImages}
+            className="w-full"
+          />
           <div className="flex flex-wrap gap-2 mt-2">
             {previewImages.map((src, idx) => (
               <div key={idx} className="relative w-28 h-28">
-                <img src={src} alt={`preview-${idx}`} className="w-full h-full object-cover rounded-lg" />
+                <img
+                  src={src}
+                  alt={`preview-${idx}`}
+                  className="w-full h-full object-cover rounded-lg"
+                />
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(idx)}
@@ -200,14 +219,20 @@ export default function UpdateProduct() {
             type="checkbox"
             name="isPublished"
             checked={fields.isPublished}
-            onChange={(e) => handleChange({ target: { name: "isPublished", value: e.target.checked } })}
+            onChange={(e) =>
+              handleChange({
+                target: { name: "isPublished", value: e.target.checked },
+              })
+            }
           />
           <span>منتشر شود</span>
         </div>
 
         <button
           type="submit"
-          disabled={loading || !fields.title || !fields.brandId || !fields.categoryId}
+          disabled={
+            loading || !fields.title || !fields.brandId || !fields.categoryId
+          }
           className={`w-full px-6 py-3 rounded-lg font-medium transition-all ${
             loading || !fields.title || !fields.brandId || !fields.categoryId
               ? "bg-gray-400 text-gray-500 cursor-not-allowed"

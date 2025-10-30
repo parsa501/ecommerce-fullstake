@@ -168,7 +168,13 @@
  */
 
 import express from "express";
-import { create, getAll, getOne, remove, update } from "../Controllers/AddressCn.js";
+import {
+  create,
+  getAll,
+  getOne,
+  remove,
+  update,
+} from "../Controllers/AddressCn.js";
 
 const addressRouter = express.Router();
 

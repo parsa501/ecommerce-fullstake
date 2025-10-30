@@ -22,27 +22,24 @@ export default function CreateVariants() {
     }
 
     setLoading(true);
-    try {
-      const result = await fetchData("variants", {
-        method: "POST",
-        body: JSON.stringify(fields),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
 
-      setLoading(false);
-      if (result.success) {
-        notify("success", result.message);
-        navigate("/variants");
-      } else {
-        notify("error", result.message || "خطا در ثبت ویژگی");
-      }
-    } catch (err) {
-      setLoading(false);
-      notify("error", err.message || "خطا در ارسال");
+    const result = await fetchData("variants", {
+      method: "POST",
+      body: JSON.stringify(fields),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setLoading(false);
+    if (result.success) {
+      notify("success", result.message);
+      navigate("/variants");
+    } else {
+      notify("error", result.message || "خطا در ثبت ویژگی");
     }
+    setLoading(false);
   };
 
   return (
@@ -68,7 +65,6 @@ export default function CreateVariants() {
           </select>
         </div>
 
-        {/* مقدار ویژگی */}
         <div>
           <label className="block mb-1 text-sm font-medium">مقدار ویژگی</label>
           <input

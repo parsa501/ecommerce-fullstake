@@ -20,6 +20,7 @@ export const getAll = catchAsync(async (req, res, next) => {
     .populate();
 
   const result = await features.execute();
+
   return res.status(200).json({
     success: true,
     message: "لیست پرسش‌ها و پاسخ‌ها با موفقیت دریافت شد",
@@ -42,6 +43,7 @@ export const getOne = catchAsync(async (req, res, next) => {
     .populate();
 
   const result = await features.execute();
+  
   return res.status(200).json({
     success: true,
     message: "پرسش و پاسخ مورد نظر با موفقیت دریافت شد",

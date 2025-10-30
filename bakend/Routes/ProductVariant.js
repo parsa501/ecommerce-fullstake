@@ -120,19 +120,24 @@
  *         description: واریانت یافت نشد
  */
 
-import express from 'express'
-import isAdmin from '../Middlewares/IsAdmin.js'
-import { create, getAll, getOne, update, remove } from '../Controllers/ProductVariantCn.js'
+import express from "express";
+import isAdmin from "../Middlewares/IsAdmin.js";
+import {
+  create,
+  getAll,
+  getOne,
+  update,
+  remove,
+} from "../Controllers/ProductVariantCn.js";
 
-const productVariantRouter = express.Router()
+const productVariantRouter = express.Router();
 
-productVariantRouter.route('/')
-  .post(isAdmin, create)
-  .get(getAll)
+productVariantRouter.route("/").post(isAdmin, create).get(getAll);
 
-productVariantRouter.route('/:id')
+productVariantRouter
+  .route("/:id")
   .get(getOne)
   .patch(isAdmin, update)
-  .delete(isAdmin, remove)
+  .delete(isAdmin, remove);
 
-export default productVariantRouter
+export default productVariantRouter;

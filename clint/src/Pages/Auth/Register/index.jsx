@@ -13,12 +13,11 @@ export default function Register({ handlePageType }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [step, setStep] = useState(1); // 1: وارد کردن شماره | 2: وارد کردن کد
+  const [step, setStep] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 📱 مرحله اول: ارسال شماره موبایل برای دریافت کد
   const handleSendPhone = async (e) => {
     e.preventDefault();
     if (!/^(\+98|0)?9\d{9}$/.test(phoneNumber))
@@ -40,7 +39,6 @@ export default function Register({ handlePageType }) {
     }
   };
 
-  // 🔐 مرحله دوم: تأیید کد و ورود
   const handleVerifyCode = async (e) => {
     e.preventDefault();
     if (!code) return Notify("error", "کد تأیید را وارد کنید");
@@ -105,7 +103,6 @@ export default function Register({ handlePageType }) {
           </div>
         </div>
 
-        {/* 📋 فرم ثبت‌نام با OTP */}
         <div className="w-full max-w-[600px] bg-white shadow-xl rounded-2xl flex items-center justify-center flex-col p-8">
           <h2 className="text-[30px] sm:text-[40px] md:text-[60px] font-bold flex gap-2 mt-8 items-center justify-center lg:justify-start">
             <FaUserPlus /> فرم ثبت‌نام

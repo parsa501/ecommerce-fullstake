@@ -34,7 +34,6 @@ export default function GetAllReport() {
         گزارش فروش
       </h2>
 
-      {/* گزارش بر اساس وضعیت سفارش */}
       <section>
         <h3 className="font-bold text-lg mb-2">گزارش بر اساس وضعیت سفارش</h3>
         {report.reportByStatus.length === 0 ? (
@@ -42,13 +41,14 @@ export default function GetAllReport() {
         ) : (
           <ul className="list-disc pl-5">
             {report.reportByStatus.map((item, idx) => (
-              <li key={idx}>{item.status}: {item.count} سفارش</li>
+              <li key={idx}>
+                {item.status}: {item.count} سفارش
+              </li>
             ))}
           </ul>
         )}
       </section>
 
-      {/* فروش ماهانه */}
       <section>
         <h3 className="font-bold text-lg mb-2">فروش ماهانه</h3>
         {report.monthlySales.length === 0 ? (
@@ -56,13 +56,14 @@ export default function GetAllReport() {
         ) : (
           <ul className="list-disc pl-5">
             {report.monthlySales.map((item, idx) => (
-              <li key={idx}>{item.month}: {item.totalSales.toLocaleString()} تومان</li>
+              <li key={idx}>
+                {item.month}: {item.totalSales.toLocaleString()} تومان
+              </li>
             ))}
           </ul>
         )}
       </section>
 
-      {/* بیشترین تعداد سفارش */}
       <section>
         <h3 className="font-bold text-lg mb-2">بیشترین تعداد سفارش</h3>
         {report.mostCountOrder.length === 0 ? (
@@ -70,13 +71,14 @@ export default function GetAllReport() {
         ) : (
           <ul className="list-disc pl-5">
             {report.mostCountOrder.map((item, idx) => (
-              <li key={idx}>{item.productName}: {item.count} سفارش</li>
+              <li key={idx}>
+                {item.productName}: {item.count} سفارش
+              </li>
             ))}
           </ul>
         )}
       </section>
 
-      {/* بیشترین مبلغ سفارش */}
       <section>
         <h3 className="font-bold text-lg mb-2">بیشترین مبلغ سفارش</h3>
         {report.mostTotalOrderPrice.length === 0 ? (
@@ -84,13 +86,14 @@ export default function GetAllReport() {
         ) : (
           <ul className="list-disc pl-5">
             {report.mostTotalOrderPrice.map((item, idx) => (
-              <li key={idx}>{item.productName}: {item.totalPrice.toLocaleString()} تومان</li>
+              <li key={idx}>
+                {item.productName}: {item.totalPrice.toLocaleString()} تومان
+              </li>
             ))}
           </ul>
         )}
       </section>
 
-      {/* سفارشات بر اساس دسته‌بندی */}
       <section>
         <h3 className="font-bold text-lg mb-2">سفارشات بر اساس دسته‌بندی</h3>
         {report.orderPerCategory.length === 0 ? (
@@ -98,21 +101,26 @@ export default function GetAllReport() {
         ) : (
           <ul className="list-disc pl-5">
             {report.orderPerCategory.map((item, idx) => (
-              <li key={idx}>{item.categoryName}: {item.count} سفارش</li>
+              <li key={idx}>
+                {item.categoryName}: {item.count} سفارش
+              </li>
             ))}
           </ul>
         )}
       </section>
 
-      {/* مجموع مبلغ استفاده از کد تخفیف */}
       <section>
-        <h3 className="font-bold text-lg mb-2">مجموع مبلغ استفاده از کد تخفیف</h3>
+        <h3 className="font-bold text-lg mb-2">
+          مجموع مبلغ استفاده از کد تخفیف
+        </h3>
         {report.totalDiscountIdUsedAmount.length === 0 ? (
           <p className="text-gray-400">هیچ داده‌ای موجود نیست.</p>
         ) : (
           <ul className="list-disc pl-5">
             {report.totalDiscountIdUsedAmount.map((item, idx) => (
-              <li key={idx}>{item.code}: {item.totalAmount.toLocaleString()} تومان</li>
+              <li key={idx}>
+                {item.code}: {item.totalAmount.toLocaleString()} تومان
+              </li>
             ))}
           </ul>
         )}

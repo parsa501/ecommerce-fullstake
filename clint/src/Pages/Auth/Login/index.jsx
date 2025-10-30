@@ -1,7 +1,7 @@
 import React from "react";
 import { FaChevronLeft } from "react-icons/fa6";
 import { FiShare2 } from "react-icons/fi";
-import { FaLock, FaUser } from "react-icons/fa"; 
+import { FaLock, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../../assets/assest";
 import { useFormik } from "formik";
@@ -47,7 +47,6 @@ export default function Login({ handlePageType }) {
 
   return (
     <>
-      {/* هدر */}
       <div className="flex items-center justify-between px-[8%]">
         <div className="flex items-center justify-center gap-4 mt-9">
           <div
@@ -63,8 +62,10 @@ export default function Login({ handlePageType }) {
         </div>
       </div>
 
-      <div className="flex flex-col h-full lg:flex-row-reverse mt-5 mb-12 px-[5%] justify-center items-center gap-10" dir="rtl">
-        {/* بخش تصویر و توضیح سمت راست */}
+      <div
+        className="flex flex-col h-full lg:flex-row-reverse mt-5 mb-12 px-[5%] justify-center items-center gap-10"
+        dir="rtl"
+      >
         <div className="hidden md:flex flex-col  items-center text-right">
           <h2 className="text-[30px] sm:text-[40px] md:text-[60px] font-bold flex items-center gap-3">
             <FaUser /> خوش آمدید
@@ -93,7 +94,6 @@ export default function Login({ handlePageType }) {
           </div>
         </div>
 
-        {/* فرم ورود سمت چپ */}
         <div className="w-full max-w-[540px] bg-white shadow-xl rounded-2xl flex flex-col items-center justify-center px-6 py-8 text-right">
           <h2 className="text-[30px] sm:text-[40px] md:text-[60px] font-bold flex gap-2 mt-8 items-center">
             <LuLogIn /> فرم ورود
@@ -107,9 +107,10 @@ export default function Login({ handlePageType }) {
             onSubmit={formik.handleSubmit}
             className="space-y-6 mt-8 w-full max-w-[480px]"
           >
-            {/* ایمیل یا شماره موبایل */}
             <div className="w-full">
-              <h3 className="text-[23px] mb-3 font-bold">ایمیل یا شماره موبایل</h3>
+              <h3 className="text-[23px] mb-3 font-bold">
+                ایمیل یا شماره موبایل
+              </h3>
               <input
                 type="text"
                 name="email"
@@ -124,7 +125,6 @@ export default function Login({ handlePageType }) {
               )}
             </div>
 
-            {/* رمز عبور */}
             <div className="w-full">
               <h3 className="text-[23px] mb-3 font-bold">رمز عبور</h3>
               <input
@@ -150,7 +150,6 @@ export default function Login({ handlePageType }) {
             </button>
           </form>
 
-          {/* نسخه موبایل ثبت‌نام */}
           <div className="md:hidden flex w-full items-center justify-center mt-6">
             <p className="opacity-80 text-[24px] text-center">
               برای اولین بار اینجا هستید؟{" "}

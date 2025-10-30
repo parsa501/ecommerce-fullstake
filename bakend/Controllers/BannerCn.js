@@ -1,8 +1,7 @@
 import Banner from "../Models/BannerMd.js";
 import ApiFeatures, { catchAsync } from "vanta-api";
-import fs from 'fs';
-import { __dirname } from './../app.js';
-
+import fs from "fs";
+import { __dirname } from "./../app.js";
 
 export const create = catchAsync(async (req, res, next) => {
   const banner = await Banner.create(req.body);
@@ -13,10 +12,9 @@ export const create = catchAsync(async (req, res, next) => {
   });
 });
 
-
 export const getAll = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(Banner, req.query, req.role)
-    .addManualFilters(req.role === 'admin' ? {} : { isPublished: true })
+    .addManualFilters(req.role === "admin" ? {} : { isPublished: true })
     .filter()
     .sort()
     .limitFields()
@@ -27,7 +25,7 @@ export const getAll = catchAsync(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: "لیست بنرها با موفقیت دریافت شد",
-    ...result
+    ...result,
   });
 });
 
@@ -44,7 +42,7 @@ export const getOne = catchAsync(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: "بنر مورد نظر با موفقیت دریافت شد",
-    ...result
+    ...result,
   });
 });
 
@@ -55,7 +53,7 @@ export const update = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  if(!banner){
+  if (!banner) {
     return next(new Error("بنر مورد نظر یافت نشد"));
   }
 
@@ -70,13 +68,13 @@ export const remove = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const banner = await Banner.findByIdAndDelete(id);
 
-  if(!banner){
+  if (!banner) {
     return next(new Error("بنر مورد نظر یافت نشد"));
   }
 
-  if(banner.image){
+  if (banner.image) {
     const imagePath = `${__dirname}/Public/Uploads/${banner.image}`;
-    if(fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+    if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
   }
 
   return res.status(200).json({

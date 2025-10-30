@@ -22,7 +22,6 @@ export default function UpdateProductVariants() {
   const [variants, setVariants] = useState([]);
 
   useEffect(() => {
-    // بارگذاری محصولات و واریانت‌ها
     const loadData = async () => {
       const prods = await fetchData("product", {
         headers: { Authorization: `Bearer ${token}` },
@@ -39,7 +38,6 @@ export default function UpdateProductVariants() {
   }, [token]);
 
   useEffect(() => {
-    // بارگذاری اطلاعات موجود ویرایش
     (async () => {
       const result = await fetchData(`product-variants/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -67,7 +65,10 @@ export default function UpdateProductVariants() {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200"
+      dir="rtl"
+    >
       <h2 className="text-2xl font-extrabold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text mb-6">
         ویرایش ویژگی محصول
       </h2>

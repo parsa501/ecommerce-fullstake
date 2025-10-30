@@ -19,7 +19,6 @@ export default function ProductDetails() {
 
   const baseUrl = import.meta.env.VITE_BASE_FILE;
   const { token } = useSelector((state) => state.auth);
-  // گرفتن اطلاعات محصول
   useEffect(() => {
     (async () => {
       const res = await fetchData(`product/${id}`);
@@ -32,7 +31,6 @@ export default function ProductDetails() {
     })();
   }, [id]);
 
-  // گرفتن سبد خرید برای بررسی تعداد این محصول
   useEffect(() => {
     if (!token) return;
     (async () => {
@@ -60,59 +58,55 @@ export default function ProductDetails() {
   const price = priceInfo?.price || null;
   const discount = priceInfo?.discount || 0;
   const finalPrice = priceInfo?.priceAfterDiscount || null;
-// ✅ افزودن محصول به سبد خرید
-const handleAddToCart = async () => {
-  if (!priceInfo?._id) {
-    alert("این محصول نوع (Variant) ندارد، قابل افزودن نیست!");
-    return;
-  }
-  setLoadingCart(true);
+  const handleAddToCart = async () => {
+    if (!priceInfo?._id) {
+      alert("این محصول نوع (Variant) ندارد، قابل افزودن نیست!");
+      return;
+    }
+    setLoadingCart(true);
 
-  const res = await fetchData("cart", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ productVariantId: priceInfo._id }),
-  });
+    const res = await fetchData("cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ productVariantId: priceInfo._id }),
+    });
 
-  if (res?.success) {
-    const updatedItem = res.data.items.find(
-      (i) => i.productVariantId === priceInfo._id
-    );
-    setCartQuantity(updatedItem?.cartQuantity || 1);
-  }
-  setLoadingCart(false);
-};
+    if (res?.success) {
+      const updatedItem = res.data.items.find(
+        (i) => i.productVariantId === priceInfo._id
+      );
+      setCartQuantity(updatedItem?.cartQuantity || 1);
+    }
+    setLoadingCart(false);
+  };
 
-// ✅ حذف یک واحد از سبد خرید
-const handleRemoveFromCart = async () => {
-  if (!priceInfo?._id) return;
-  setLoadingCart(true);
+  const handleRemoveFromCart = async () => {
+    if (!priceInfo?._id) return;
+    setLoadingCart(true);
 
-  const res = await fetchData("cart", {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ productVariantId: priceInfo._id }),
-  });
+    const res = await fetchData("cart", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ productVariantId: priceInfo._id }),
+    });
 
-  if (res?.success) {
-    const updatedItem = res.data.items.find(
-      (i) => i.productVariantId === priceInfo._id
-    );
-    setCartQuantity(updatedItem?.cartQuantity || 0);
-  }
-  setLoadingCart(false);
-};
-
+    if (res?.success) {
+      const updatedItem = res.data.items.find(
+        (i) => i.productVariantId === priceInfo._id
+      );
+      setCartQuantity(updatedItem?.cartQuantity || 0);
+    }
+    setLoadingCart(false);
+  };
 
   return (
     <div className="px-[6%] py-8">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div
           onClick={() => navigate(-1)}
@@ -124,9 +118,7 @@ const handleRemoveFromCart = async () => {
         <FiShare2 className="text-2xl cursor-pointer" />
       </div>
 
-      {/* Main Section */}
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Images */}
         <div className="w-full md:w-1/2 flex flex-col gap-4">
           <img
             src={baseUrl + selectedImage}
@@ -149,7 +141,6 @@ const handleRemoveFromCart = async () => {
           </div>
         </div>
 
-        {/* Details */}
         <div className="w-full md:w-1/2 bg-white p-8 rounded-3xl shadow-lg flex flex-col gap-6">
           <h1 className="text-3xl font-extrabold text-gray-900">
             {product.title}
@@ -157,7 +148,6 @@ const handleRemoveFromCart = async () => {
 
           <p className="text-gray-600 leading-relaxed">{product.description}</p>
 
-          {/* Price */}
           {price ? (
             <div className="flex items-center gap-3">
               <span className="text-3xl font-bold text-green-600">
@@ -180,7 +170,6 @@ const handleRemoveFromCart = async () => {
             </span>
           )}
 
-          {/* Brand / Category */}
           <div className="grid grid-cols-2 gap-4 text-sm">
             <p>
               <span className="font-medium">برند:</span> {brand}
@@ -190,7 +179,6 @@ const handleRemoveFromCart = async () => {
             </p>
           </div>
 
-          {/* Rating */}
           <div className="flex items-center gap-3">
             <StarRatings
               rating={product.rating || 0}
@@ -204,7 +192,6 @@ const handleRemoveFromCart = async () => {
             </span>
           </div>
 
-          {/* Cart */}
           {cartQuantity > 0 ? (
             <div className="flex items-center gap-6 mt-4">
               <motion.button

@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 const exportValidation = (req, res, next) => {
   try {
     const token = req?.headers?.authorization?.split(" ")[1];

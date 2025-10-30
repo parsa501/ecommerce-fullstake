@@ -18,7 +18,6 @@ export default function GetAllVariants() {
   };
 
   const handleDelete = async (id) => {
-
     const result = await fetchData(`variants/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },

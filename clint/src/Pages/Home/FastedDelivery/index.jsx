@@ -26,7 +26,10 @@ const features = [
 
 export default function FastedDelivery() {
   return (
-    <div className="w-[90%] border border-[#E4E7E9] rounded-xl mt-8 mx-auto flex flex-wrap items-center justify-between gap-6 p-6 sm:p-8 lg:gap-10 text-right" dir="rtl">
+    <div
+      className="w-[90%] border border-[#E4E7E9] rounded-xl mt-8 mx-auto flex flex-wrap items-center justify-between gap-6 p-6 sm:p-8 lg:gap-10 text-right"
+      dir="rtl"
+    >
       {features.map(({ icon, title, text }, i) => (
         <div
           key={i}
@@ -34,7 +37,9 @@ export default function FastedDelivery() {
         >
           <img className="w-10 h-10 sm:w-12 sm:h-12" src={icon} alt={title} />
           <div className="flex flex-col">
-            <h4 className="font-semibold text-[15px] sm:text-[16px] text-[#191C1F]">{title}</h4>
+            <h4 className="font-semibold text-[15px] sm:text-[16px] text-[#191C1F]">
+              {title}
+            </h4>
             <p className="text-[13px] sm:text-[14px] text-[#5F6C72]">{text}</p>
           </div>
         </div>

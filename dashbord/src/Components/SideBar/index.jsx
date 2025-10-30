@@ -37,7 +37,11 @@ export default function Sidebar() {
     { name: "سفارشات", key: "/orders", icon: <MdShoppingCart /> },
     { name: "سؤالات متداول", key: "/faq", icon: <MdQuestionAnswer /> },
     { name: "نظرات مشتریان", key: "/testimonial", icon: <MdStarRate /> },
-    { name: "سؤالات کاربران", key: "/user-question", icon: <MdQuestionAnswer /> },
+    {
+      name: "سؤالات کاربران",
+      key: "/user-question",
+      icon: <MdQuestionAnswer />,
+    },
     { name: "گزارش‌ها", key: "/report", icon: <MdReport /> },
   ];
 
@@ -46,12 +50,10 @@ export default function Sidebar() {
       dir="rtl"
       className="w-64 h-[154vh] bg-white/10 backdrop-blur-2xl border-l border-white/20 shadow-2xl flex flex-col p-6 rounded-tl-3xl rounded-bl-3xl overflow-y-auto"
     >
-      {/* Logo / Title */}
       <div className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-8 text-center">
         پنل مدیریت
       </div>
 
-      {/* Navigation */}
       <nav className="flex flex-col gap-2 flex-1">
         {navItems.map((item) => {
           const isActive =

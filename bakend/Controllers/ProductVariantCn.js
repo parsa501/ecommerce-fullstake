@@ -37,6 +37,7 @@ export const getAll = catchAsync(async (req, res, next) => {
     { path: "productId" },
     { path: "variantId" },
   ]);
+  
   return res.status(200).json({
     success: true,
     message: "لیست واریانت‌های محصول با موفقیت دریافت شد",

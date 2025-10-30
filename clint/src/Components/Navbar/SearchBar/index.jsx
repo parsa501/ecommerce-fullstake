@@ -11,7 +11,6 @@ export default function SearchBar({ value, onChange, placeholder }) {
   const controllerRef = useRef(null);
   const { token } = useSelector((state) => state.auth);
 
-  // بستن لیست نتایج وقتی بیرون کلیک می‌شود
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -22,14 +21,12 @@ export default function SearchBar({ value, onChange, placeholder }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // تابع جستجو با debounce و لغو درخواست قبلی
   useEffect(() => {
     if (!value || value.trim().length < 2) {
       setFilteredResults([]);
       return;
     }
 
-    // لغو درخواست قبلی
     if (controllerRef.current) controllerRef.current.abort();
     controllerRef.current = new AbortController();
 
@@ -48,7 +45,6 @@ export default function SearchBar({ value, onChange, placeholder }) {
           Authorization: `Bearer ${token}`,
         },
       });
-console.log(res)
       if (res?.success && res?.data) {
         const allResults = [
           ...(res.data["محصولات"] || []),
@@ -67,7 +63,6 @@ console.log(res)
 
   return (
     <div className="relative w-full z-[1000]" ref={wrapperRef} dir="rtl">
-      {/* فرم جستجو */}
       <form
         className="relative w-full h-[48px] bg-[#F3F9FB] flex flex-row rounded-[10px] overflow-hidden"
         onSubmit={(e) => e.preventDefault()}
@@ -84,7 +79,6 @@ console.log(res)
         </div>
       </form>
 
-      {/* لیست نتایج */}
       {value && filteredResults.length > 0 && (
         <ul className="absolute top-full mt-2 bg-white w-full shadow-lg rounded-[10px] z-10 max-h-[300px] overflow-y-auto border border-gray-100">
           {filteredResults.map((item, index) => {
@@ -93,7 +87,6 @@ console.log(res)
             const title = item?.title || item?.name;
             const documentId = item?._id;
 
-            // تشخیص نوع آیتم
             const isProduct = !!item?.productVariantIds;
             const isBrand = !!item?.isPublished && !item?.productVariantIds;
             const isCategory = !!item?.categoryId && !isProduct;

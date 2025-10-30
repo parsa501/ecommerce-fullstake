@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import fetchData from "../../../Utils/fetchData";
 
-// Swiper components & modules
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 
-// Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
@@ -18,7 +16,6 @@ export default function Brand() {
     (async () => {
       const response = await fetchData("brands");
       setBrand(response?.data);
-      console.log(response);
     })();
   }, []);
 

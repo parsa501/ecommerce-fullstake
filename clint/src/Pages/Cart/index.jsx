@@ -11,80 +11,76 @@ import { useSelector } from "react-redux";
 export default function Cart() {
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
-
-  const [cart, setCart] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  // گرفتن سبد خرید
-  const getCart = async () => {
-    if (!token) return;
-    setLoading(true);
-
-    const res = await fetchData("cart", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (res?.success && res.data) setCart(res.data);
-    else setCart({ items: [] });
-  };
-
+  const [cartData, setCartData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    getCart();
-  }, [token]);
-
-  // پاک کردن کل سبد
-  const handleClear = async () => {
-    if (!token) return;
-    setLoading(true);
-    try {
-      const res = await fetchData("cart/clear", {
-        method: "DELETE",
+    (async () => {
+      if (!token) return;
+      setIsLoading(true);
+      const response = await fetchData("cart", {
+        method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res?.success && res.data) setCart(res.data);
-      else await getCart();
-    } catch (err) {
-      console.error("handleClear error:", err);
-    } finally {
-      setLoading(false);
+
+      if (response?.success && response.data) {
+        setCartData(response.data);
+      } else {
+        setCartData({ items: [] });
+      }
+      setIsLoading(false);
+    })();
+  }, [token]);
+
+  const handleClearCart = async () => {
+    if (!token) return;
+    setIsLoading(true);
+
+    const response = await fetchData("cart/clear", {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response?.success && response.data) {
+      setCartData(response.data);
     }
+    setIsLoading(false);
   };
 
-  if (!cart) return <Loading />;
+  if (!cartData) return <Loading />;
 
-  const items = Array.isArray(cart.items) ? cart.items : [];
-  const cartLength = items.length;
+  const cartItems = Array.isArray(cartData.items) ? cartData.items : [];
+  const cartItemsCount = cartItems.length;
 
-  if (cartLength === 0) return <NotItems />;
+  if (cartItemsCount === 0) return <NotItems />;
 
-  // helper برای گرفتن مقادیر با ایمنی
-  const getVariant = (item) => item?.productVariantId ?? {};
-  const toNum = (v) => (typeof v === "number" ? v : Number(v) || 0);
-  const fmt = (n) => Number(n || 0).toLocaleString("fa-IR");
+  const getVariantData = (item) => item?.productVariantId ?? {};
+  const toNumber = (value) =>
+    typeof value === "number" ? value : Number(value) || 0;
+  const formatPrice = (num) => Number(num || 0).toLocaleString("fa-IR");
 
-  const totalWithoutDiscount = items.reduce((sum, itm) => {
-    const pv = getVariant(itm);
-    const price = toNum(pv.price ?? itm.price);
-    const qty = toNum(itm.cartQuantity ?? itm.quantity);
-    return sum + price * qty;
+  const totalPriceWithoutDiscount = cartItems.reduce((sum, item) => {
+    const variant = getVariantData(item);
+    const price = toNumber(variant.price ?? item.price);
+    const quantity = toNumber(item.cartQuantity ?? item.quantity);
+    return sum + price * quantity;
   }, 0);
 
-  const totalDiscount = items.reduce((sum, itm) => {
-    const pv = getVariant(itm);
-    const price = toNum(pv.price ?? itm.price);
-    const discount = toNum(pv.discount ?? itm.discount);
-    const qty = toNum(itm.cartQuantity ?? itm.quantity);
-    return sum + ((price * discount) / 100) * qty;
+  const totalDiscountAmount = cartItems.reduce((sum, item) => {
+    const variant = getVariantData(item);
+    const price = toNumber(variant.price ?? item.price);
+    const discount = toNumber(variant.discount ?? item.discount);
+    const quantity = toNumber(item.cartQuantity ?? item.quantity);
+    return sum + ((price * discount) / 100) * quantity;
   }, 0);
 
-  const totalWithDiscount =
-    typeof cart.totalPriceAfterDiscount === "number"
-      ? cart.totalPriceAfterDiscount
-      : totalWithoutDiscount - totalDiscount;
+  const totalPriceWithDiscount =
+    typeof cartData.totalPriceAfterDiscount === "number"
+      ? cartData.totalPriceAfterDiscount
+      : totalPriceWithoutDiscount - totalDiscountAmount;
 
-  const makeNameForUrl = (s) =>
+  const createSlugFromName = (str) =>
     encodeURIComponent(
-      String(s ?? "product")
+      String(str ?? "product")
         .trim()
         .replace(/\s+/g, "-")
         .toLowerCase()
@@ -93,7 +89,6 @@ export default function Cart() {
   return (
     <div dir="rtl" className="min-h-screen bg-gray-50 text-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-10 py-6">
-        {/* header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <button
@@ -113,20 +108,18 @@ export default function Cart() {
           <FiShare2 className="text-2xl text-gray-600" />
         </div>
 
-        {/* content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* لیست محصولات */}
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <span className="text-sm font-medium">تعداد آیتم‌ها:</span>
                 <span className="bg-red-300 px-3 py-1 rounded-full font-semibold">
-                  {fmt(cartLength)}
+                  {formatPrice(cartItemsCount)}
                 </span>
               </div>
               <button
-                onClick={handleClear}
-                disabled={loading}
+                onClick={handleClearCart}
+                disabled={isLoading}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-800 disabled:opacity-60"
               >
                 <HiOutlineTrash className="text-lg" />
@@ -135,41 +128,43 @@ export default function Cart() {
             </div>
 
             <div className="bg-white rounded-lg shadow-sm divide-y">
-              {items.map((item, idx) => {
-                const pv = getVariant(item);
-                const price = toNum(pv.price ?? item.price);
-                const discount = toNum(pv.discount ?? item.discount);
-                const finalPrice = toNum(pv.priceAfterDiscount ?? price);
-                const qty = toNum(item.cartQuantity ?? item.quantity);
+              {cartItems.map((item, index) => {
+                const variant = getVariantData(item);
+                const price = toNumber(variant.price ?? item.price);
+                const discount = toNumber(variant.discount ?? item.discount);
+                const finalPrice = toNumber(
+                  variant.priceAfterDiscount ?? price
+                );
+                const quantity = toNumber(item.cartQuantity ?? item.quantity);
 
                 const productId =
                   item?.productId?._id ??
                   item?.productId ??
-                  pv?._id ??
-                  `tmp-${idx}`;
+                  variant?._id ??
+                  `temp-${index}`;
                 const productName =
                   item?.productId?.title ?? item?.title ?? "محصول";
 
                 return (
                   <div
-                    key={productId + "-" + idx}
+                    key={productId + "-" + index}
                     className="flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 hover:bg-gray-50 transition"
                   >
                     <div
                       className="flex-1 min-w-0 cursor-pointer"
                       onClick={() =>
                         navigate(
-                          `/products-details/${productId}/${makeNameForUrl(
+                          `/products-details/${productId}/${createSlugFromName(
                             productName
                           )}`
                         )
                       }
                       role="button"
                       tabIndex={0}
-                      onKeyDown={(e) =>
-                        e.key === "Enter" &&
+                      onKeyDown={(event) =>
+                        event.key === "Enter" &&
                         navigate(
-                          `/products-details/${productId}/${makeNameForUrl(
+                          `/products-details/${productId}/${createSlugFromName(
                             productName
                           )}`
                         )
@@ -182,7 +177,7 @@ export default function Cart() {
                               import.meta.env.VITE_BASE_FILE +
                               item?.productId?.images?.[0]
                             }
-                            alt="image"
+                            alt="product"
                           />
                         </div>
                         <div className="text-right">
@@ -191,7 +186,9 @@ export default function Cart() {
                           </div>
                           <div className="text-xs text-gray-500 mt-1">
                             تعداد:{" "}
-                            <span className="font-semibold">{fmt(qty)}</span>
+                            <span className="font-semibold">
+                              {formatPrice(quantity)}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -200,22 +197,22 @@ export default function Cart() {
                     <div className="w-full sm:w-auto flex items-center justify-between sm:flex-col sm:items-end gap-3">
                       <div className="text-right">
                         <div className="text-sm sm:text-base font-semibold text-blue-600">
-                          {fmt(finalPrice)} تومان
+                          {formatPrice(finalPrice)} تومان
                         </div>
                         {discount > 0 && (
                           <div className="text-xs text-gray-400 line-through">
-                            {fmt(price)} تومان
+                            {formatPrice(price)} تومان
                           </div>
                         )}
                       </div>
 
                       <div className="text-right">
                         <div className="text-sm font-semibold">
-                          {fmt(finalPrice * qty)} تومان
+                          {formatPrice(finalPrice * quantity)} تومان
                         </div>
                         {discount > 0 && (
                           <div className="text-xs text-red-600 mt-1">
-                            -{fmt(discount)}%
+                            -{formatPrice(discount)}%
                           </div>
                         )}
                       </div>
@@ -234,27 +231,28 @@ export default function Cart() {
             </div>
           </div>
 
-          {/* فاکتور */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-lg p-5 flex flex-col gap-4">
               <h3 className="text-lg font-bold text-gray-800">صورتحساب</h3>
 
               <div className="flex justify-between text-sm">
                 <span>مجموع آیتم‌ها</span>
-                <span className="font-medium">{fmt(cartLength)}</span>
+                <span className="font-medium">
+                  {formatPrice(cartItemsCount)}
+                </span>
               </div>
 
               <div className="flex justify-between text-sm">
                 <span>مجموع قبل از تخفیف</span>
                 <span className="font-medium text-green-600">
-                  {fmt(totalWithoutDiscount)} تومان
+                  {formatPrice(totalPriceWithoutDiscount)} تومان
                 </span>
               </div>
 
               <div className="flex justify-between text-sm">
                 <span>مجموع تخفیف</span>
                 <span className="font-medium text-red-600">
-                  -{fmt(totalDiscount)} تومان
+                  -{formatPrice(totalDiscountAmount)} تومان
                 </span>
               </div>
 
@@ -265,7 +263,7 @@ export default function Cart() {
 
               <div className="flex justify-between text-lg font-bold text-indigo-600 mt-2">
                 <span>مبلغ قابل پرداخت</span>
-                <span>{fmt(totalWithDiscount)} تومان</span>
+                <span>{formatPrice(totalPriceWithDiscount)} تومان</span>
               </div>
 
               <button

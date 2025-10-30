@@ -15,7 +15,6 @@ export default function Footer() {
       dir="rtl"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
-        {/* بخش تماس با ما */}
         <div>
           <h3 className="text-lg font-semibold mb-3">ارتباط با ما</h3>
           <p className="flex items-center text-sm text-[#ADB7BC] mb-2">
@@ -44,7 +43,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* دسته‌بندی‌های برتر */}
         <div>
           <h3 className="text-lg font-semibold mb-3">دسته‌بندی‌های محبوب</h3>
           <ul className="text-sm text-[#ADB7BC] space-y-2">
@@ -76,7 +74,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* لینک‌های سریع */}
         <div>
           <h3 className="text-lg font-semibold mb-3">لینک‌های مفید</h3>
           <ul className="text-sm text-[#ADB7BC] space-y-2">
@@ -113,7 +110,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* دانلود اپ */}
         <div>
           <h3 className="text-lg font-semibold mb-3">دانلود اپلیکیشن</h3>
           <div className="flex flex-col gap-3 text-sm text-[#ADB7BC]">
@@ -128,7 +124,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* تگ‌های محبوب */}
         <div>
           <h3 className="text-lg font-semibold mb-3">تگ‌های محبوب</h3>
           <div className="flex flex-wrap gap-2">
@@ -146,7 +141,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* خط پایین فوتر */}
       <div className="border-t border-gray-700 mt-10 pt-5 text-center text-sm text-[#77878F]">
         © {new Date().getFullYear()} تمامی حقوق برای{" "}
         <span className="text-[#00B5AD]">دیجی‌شاپ</span> محفوظ است.

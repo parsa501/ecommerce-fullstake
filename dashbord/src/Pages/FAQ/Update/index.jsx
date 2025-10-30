@@ -74,7 +74,9 @@ export default function UpdateFAQ() {
             name="isPublished"
             checked={fields.isPublished}
             onChange={(e) =>
-              handleChange({ target: { name: "isPublished", value: e.target.checked } })
+              handleChange({
+                target: { name: "isPublished", value: e.target.checked },
+              })
             }
             className="accent-cyan-400 w-5 h-5"
           />

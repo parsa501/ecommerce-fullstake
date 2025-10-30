@@ -22,7 +22,6 @@ export default function GetAllBrands() {
   }, [token]);
 
   const handleDelete = async (id, image) => {
-
     const result = await fetchData(`brands/${id}`, {
       method: "DELETE",
       headers: { authorization: `Bearer ${token}` },

@@ -123,12 +123,12 @@ export const report = catchAsync(async (req, res, next) => {
     success: true,
     message: "گزارش فروش با موفقیت دریافت شد",
     data: {
-      reportByStatus, // گزارش وضعیت سفارش‌ها (در انتظار، موفق، لغو شده و ...)
-      monthlySales, // فروش ماهانه
-      mostCountOrder, // کاربران با بیشترین تعداد سفارش
-      mostTotalOrderPrice, // کاربران با بیشترین مبلغ خرید
-      orderPerCategory, // فروش به تفکیک دسته‌بندی
-      totalDiscountIdUsedAmount, // استفاده و میزان تخفیف‌ها
+      reportByStatus,
+      monthlySales,
+      mostCountOrder,
+      mostTotalOrderPrice,
+      orderPerCategory,
+      totalDiscountIdUsedAmount,
     },
   });
 });

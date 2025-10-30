@@ -16,8 +16,12 @@ export default function CategoryCard({
   const fillColor = rating > 3 ? "#397CFF" : "#FF4853";
   const backgroundColor = rating > 3 ? "#CFDFFF" : "#FFD6D8";
 
-  const truncatedTitle = title?.split(" ").slice(0, 5).join(" ") + (title?.split(" ").length > 5 ? " ..." : "");
-  const truncatedDescription = description?.split(" ").slice(0, 12).join(" ") + (description?.split(" ").length > 12 ? " ..." : "");
+  const truncatedTitle =
+    title?.split(" ").slice(0, 5).join(" ") +
+    (title?.split(" ").length > 5 ? " ..." : "");
+  const truncatedDescription =
+    description?.split(" ").slice(0, 12).join(" ") +
+    (description?.split(" ").length > 12 ? " ..." : "");
 
   return (
     <div
@@ -27,7 +31,6 @@ export default function CategoryCard({
       }
       className="group relative flex flex-col w-[380px] mb-8 cursor-pointer bg-white rounded-3xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300"
     >
-      {/* تصویر محصول */}
       <div className="relative w-full h-[280px] rounded-t-3xl overflow-hidden">
         <img
           src={img}
@@ -39,13 +42,11 @@ export default function CategoryCard({
         </span>
       </div>
 
-      {/* محتوا */}
       <div className="p-4 flex flex-col gap-2">
         <h3 className="font-bold text-lg">{truncatedTitle}</h3>
         <p className="text-gray-500 text-sm">{truncatedDescription}</p>
         <p className="text-gray-400 text-xs">دسته‌بندی: {categoryId}</p>
 
-        {/* امتیاز */}
         <div className="flex items-center justify-between mt-2">
           <StarRatings
             rating={rating}
@@ -60,7 +61,6 @@ export default function CategoryCard({
           </span>
         </div>
 
-        {/* نوار پیشرفت */}
         <div className="mt-2 w-full h-2 rounded-full bg-gray-200 overflow-hidden">
           <div
             style={{ width: `${percent}%`, backgroundColor: fillColor }}
@@ -68,7 +68,6 @@ export default function CategoryCard({
           />
         </div>
 
-        {/* دکمه خرید */}
         <button className="mt-4 w-full py-3 bg-[#232321] hover:bg-[#1a1a1a] text-white font-medium rounded-lg transition-colors duration-300">
           خرید محصول
         </button>

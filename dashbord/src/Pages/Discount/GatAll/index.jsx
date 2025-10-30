@@ -8,7 +8,6 @@ export default function GetAllDiscount() {
   const [discounts, setDiscounts] = useState([]);
   const { token } = useContext(AuthContext);
 
-  // گرفتن لیست تخفیف‌ها
   const loadDiscounts = async () => {
     const result = await fetchData("discount", {
       headers: { Authorization: `Bearer ${token}` },
@@ -17,9 +16,7 @@ export default function GetAllDiscount() {
     else Notify("error", result.message || "خطا در دریافت لیست تخفیف‌ها");
   };
 
-  // حذف تخفیف
   const handleDelete = async (id) => {
-
     const result = await fetchData(`discount/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
@@ -70,21 +67,20 @@ export default function GetAllDiscount() {
                   {d.code}
                 </h3>
                 <p className="text-sm text-gray-300">
-                  نوع:{" "}
-                  {d.discountType === "percentage" ? "درصدی" : "مبلغی"} – مقدار:{" "}
+                  نوع: {d.discountType === "percentage" ? "درصدی" : "مبلغی"} –
+                  مقدار:{" "}
                   <span className="font-bold text-white">
                     {d.value}
                     {d.discountType === "percentage" ? "%" : " تومان"}
                   </span>
                 </p>
                 <p className="text-sm text-gray-400">
-                  بازه:{" "}
-                  {new Date(d.startTime).toLocaleDateString("fa-IR")} تا{" "}
+                  بازه: {new Date(d.startTime).toLocaleDateString("fa-IR")} تا{" "}
                   {new Date(d.expireTime).toLocaleDateString("fa-IR")}
                 </p>
                 <p className="text-xs text-gray-500">
-                  حداقل مبلغ: {d.minPrice?.toLocaleString() || "ندارد"} تومان | حداکثر مبلغ:{" "}
-                  {d.maxPrice?.toLocaleString() || "ندارد"} تومان
+                  حداقل مبلغ: {d.minPrice?.toLocaleString() || "ندارد"} تومان |
+                  حداکثر مبلغ: {d.maxPrice?.toLocaleString() || "ندارد"} تومان
                 </p>
                 <p className="text-xs text-gray-500">
                   تعداد مجاز استفاده: {d.maxUsedCount} | وضعیت:{" "}

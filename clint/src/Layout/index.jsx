@@ -4,7 +4,7 @@ import Navbar from "../Components/Navbar";
 import Footer from "../components/Footer";
 
 export default function Layout() {
-   return (
+  return (
     <>
       <Navbar />
       <main
@@ -13,7 +13,7 @@ export default function Layout() {
       >
         <Outlet />
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 }

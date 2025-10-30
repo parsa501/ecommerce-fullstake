@@ -9,7 +9,6 @@ export default function CategoryDetails() {
   const [category, setCategory] = useState();
   const [products, setProducts] = useState([]);
 
-  // گرفتن اطلاعات دسته‌بندی
   useEffect(() => {
     (async () => {
       const response = await fetchData(`category/${id}`);
@@ -17,7 +16,6 @@ export default function CategoryDetails() {
     })();
   }, [id]);
 
-  // گرفتن محصولات مرتبط با دسته‌بندی
   useEffect(() => {
     (async () => {
       const response = await fetchData(`product`);
@@ -53,9 +51,7 @@ export default function CategoryDetails() {
           alt={category?.title}
           className="w-24 h-24 border border-gray-100 shadow-2xl rounded-2xl object-cover"
         />
-        <h2 className="text-[34px] font-bold">
-          دسته‌بندی: {category?.title}
-        </h2>
+        <h2 className="text-[34px] font-bold">دسته‌بندی: {category?.title}</h2>
       </div>
 
       {products?.length > 0 ? (

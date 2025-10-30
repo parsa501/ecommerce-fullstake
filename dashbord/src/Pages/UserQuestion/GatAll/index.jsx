@@ -59,7 +59,9 @@ export default function GetAllUserQuestion() {
               className="bg-white/5 border border-white/20 rounded-xl p-4 flex justify-between items-center hover:bg-white/10 transition"
             >
               <div>
-                <h3 className="font-semibold text-lg text-cyan-300">{q.name}</h3>
+                <h3 className="font-semibold text-lg text-cyan-300">
+                  {q.name}
+                </h3>
                 <p className="text-sm text-gray-300">{q.email}</p>
                 <p className="text-sm text-gray-100 mt-1">سؤال: {q.question}</p>
                 <p className="text-xs text-gray-400 mt-1">

@@ -42,7 +42,10 @@ export default function GetAllUser() {
   };
 
   return (
-    <div className="p-8 bg-white/10 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 mt-6" dir="rtl">
+    <div
+      className="p-8 bg-white/10 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 mt-6"
+      dir="rtl"
+    >
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-emerald-500">

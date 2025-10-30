@@ -71,7 +71,9 @@ export default function CreateFAQ() {
               name="isPublished"
               checked={fields.isPublished}
               onChange={(e) =>
-                handleChange({ target: { name: "isPublished", value: e.target.checked } })
+                handleChange({
+                  target: { name: "isPublished", value: e.target.checked },
+                })
               }
             />
             <span>منتشر شود</span>

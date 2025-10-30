@@ -23,7 +23,6 @@ export default function UpdateBanners() {
   const [loading, setLoading] = React.useState(false);
   const fileRef = useRef();
 
-  // دریافت داده بنر برای ویرایش
   useEffect(() => {
     (async () => {
       const result = await fetchData(`banner/${id}`, {
@@ -35,7 +34,9 @@ export default function UpdateBanners() {
         handleChange({ target: { name: "title", value: banner.title } });
         handleChange({ target: { name: "content", value: banner.content } });
         handleChange({ target: { name: "href", value: banner.href } });
-        handleChange({ target: { name: "isPublished", value: banner.isPublished } });
+        handleChange({
+          target: { name: "isPublished", value: banner.isPublished },
+        });
 
         setOldImage(banner.image);
         if (banner.image)

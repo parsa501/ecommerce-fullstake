@@ -18,8 +18,8 @@ export const getAll = catchAsync(async (req, res, next) => {
     .limitFields()
     .paginate()
     .populate();
-
   const result = await features.execute();
+
   return res.status(200).json({
     success: true,
     message: "لیست نظرات مشتریان با موفقیت دریافت شد",
@@ -40,8 +40,8 @@ export const getOne = catchAsync(async (req, res, next) => {
     .limitFields()
     .paginate()
     .populate();
-
   const result = await features.execute();
+  
   return res.status(200).json({
     success: true,
     message: "نظر مشتری مورد نظر با موفقیت دریافت شد",

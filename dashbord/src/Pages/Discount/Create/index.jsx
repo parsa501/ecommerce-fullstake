@@ -51,7 +51,6 @@ export default function CreateDiscount() {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* کد تخفیف */}
         <input
           type="text"
           name="code"
@@ -62,7 +61,6 @@ export default function CreateDiscount() {
           required
         />
 
-        {/* نوع تخفیف */}
         <div>
           <label className="block mb-1 text-sm">نوع تخفیف</label>
           <select
@@ -76,7 +74,6 @@ export default function CreateDiscount() {
           </select>
         </div>
 
-        {/* مقدار تخفیف */}
         <input
           type="number"
           name="value"
@@ -87,7 +84,6 @@ export default function CreateDiscount() {
           required
         />
 
-        {/* تاریخ شروع و پایان */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block mb-1 text-sm">تاریخ شروع</label>
@@ -113,7 +109,6 @@ export default function CreateDiscount() {
           </div>
         </div>
 
-        {/* حداقل و حداکثر مبلغ سفارش */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <input
             type="number"
@@ -133,7 +128,6 @@ export default function CreateDiscount() {
           />
         </div>
 
-        {/* تعداد استفاده مجاز */}
         <input
           type="number"
           name="maxUsedCount"
@@ -144,7 +138,6 @@ export default function CreateDiscount() {
           onChange={handleChange}
         />
 
-        {/* فعال / غیرفعال */}
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
@@ -159,7 +152,6 @@ export default function CreateDiscount() {
           <span>فعال باشد</span>
         </div>
 
-        {/* دکمه ثبت */}
         <button
           type="submit"
           className="w-full bg-gradient-to-r from-purple-500 to-cyan-500 text-white font-bold py-3 rounded-lg shadow-lg hover:scale-105 transition"

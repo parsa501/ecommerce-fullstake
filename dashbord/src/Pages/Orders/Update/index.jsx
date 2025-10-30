@@ -13,7 +13,6 @@ export default function UpdateOrders() {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // 📥 دریافت اطلاعات سفارش
   useEffect(() => {
     (async () => {
       const result = await fetchData(`orders/${id}`, {
@@ -26,7 +25,6 @@ export default function UpdateOrders() {
     })();
   }, [id]);
 
-  // 💾 ارسال فرم برای ویرایش وضعیت سفارش
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -54,7 +52,6 @@ export default function UpdateOrders() {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* انتخاب وضعیت سفارش */}
         <div>
           <label className="block text-gray-300 mb-2">وضعیت سفارش</label>
           <select

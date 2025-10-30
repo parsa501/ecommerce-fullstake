@@ -18,7 +18,6 @@ export default function CreateUserQuestion() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // اعتبارسنجی ساده
     if (!fields.name || !fields.email || !fields.question) {
       Notify("error", "تمام فیلدها الزامی هستند");
       return;

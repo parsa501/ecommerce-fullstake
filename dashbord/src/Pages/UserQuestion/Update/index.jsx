@@ -61,7 +61,6 @@ export default function UpdateUserQuestion() {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* نمایش اطلاعات کاربر و سؤال */}
         <div className="space-y-1">
           <p className="text-white">
             <span className="font-semibold">نام: </span> {fields.name}
@@ -74,7 +73,6 @@ export default function UpdateUserQuestion() {
           </p>
         </div>
 
-        {/* پاسخ */}
         <div>
           <label className="block mb-1 text-sm font-medium">پاسخ</label>
           <textarea
@@ -86,7 +84,6 @@ export default function UpdateUserQuestion() {
           />
         </div>
 
-        {/* وضعیت */}
         <div>
           <label className="block mb-1 text-sm font-medium">وضعیت</label>
           <select

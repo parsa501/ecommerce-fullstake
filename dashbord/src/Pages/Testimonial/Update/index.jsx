@@ -40,7 +40,11 @@ export default function UpdateTestimonial() {
         });
         if (testimonial.image) {
           setOldImage(testimonial.image);
-          setPreview(testimonial.image.startsWith("http") ? testimonial.image : import.meta.env.VITE_BASE_FILE + testimonial.image);
+          setPreview(
+            testimonial.image.startsWith("http")
+              ? testimonial.image
+              : import.meta.env.VITE_BASE_FILE + testimonial.image
+          );
         }
       } else {
         notify("error", result.message || "تستیمونیال یافت نشد");
@@ -64,7 +68,10 @@ export default function UpdateTestimonial() {
         await fetchData("upload", {
           method: "DELETE",
           body: JSON.stringify({ filename: oldImage }),
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         notify("success", "تصویر قبلی حذف شد");
       } catch (err) {
@@ -108,12 +115,18 @@ export default function UpdateTestimonial() {
       const result = await fetchData(`testimonial/${id}`, {
         method: "PATCH",
         body: JSON.stringify({ ...fields, image: imageName }),
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       setLoading(false);
       if (result.success) {
-        notify("success", result.message || "تستیمونیال با موفقیت بروزرسانی شد");
+        notify(
+          "success",
+          result.message || "تستیمونیال با موفقیت بروزرسانی شد"
+        );
         navigate("/testimonial");
       } else notify("error", result.message || "خطا در بروزرسانی تستیمونیال");
     } catch (err) {
@@ -123,7 +136,10 @@ export default function UpdateTestimonial() {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200"
+      dir="rtl"
+    >
       <h2 className="text-2xl font-extrabold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text mb-6">
         ویرایش تستیمونیال
       </h2>
@@ -165,10 +181,20 @@ export default function UpdateTestimonial() {
 
         <div>
           <label className="block mb-1 text-sm font-medium">تصویر مشتری</label>
-          <input ref={fileRef} type="file" accept="image/*" onChange={handleImage} className="w-full" />
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImage}
+            className="w-full"
+          />
           {preview && (
             <div className="relative mt-2 w-28 h-28">
-              <img src={preview} alt="preview" className="w-full h-full object-cover rounded-lg" />
+              <img
+                src={preview}
+                alt="preview"
+                className="w-full h-full object-cover rounded-lg"
+              />
               <button
                 type="button"
                 onClick={handleRemoveImage}
@@ -185,7 +211,11 @@ export default function UpdateTestimonial() {
             type="checkbox"
             name="isPublished"
             checked={fields.isPublished}
-            onChange={(e) => handleChange({ target: { name: "isPublished", value: e.target.checked } })}
+            onChange={(e) =>
+              handleChange({
+                target: { name: "isPublished", value: e.target.checked },
+              })
+            }
           />
           <span>منتشر شود</span>
         </div>

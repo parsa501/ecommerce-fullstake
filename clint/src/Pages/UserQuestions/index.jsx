@@ -6,7 +6,7 @@ export default function UserQuestions() {
   return (
     <>
       <UserOpinion />
-      <Questions/>
+      <Questions />
     </>
   );
 }

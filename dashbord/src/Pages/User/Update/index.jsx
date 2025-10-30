@@ -79,8 +79,7 @@ export default function UpdateUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.username.trim())
-      return notify("error", "نام کاربری الزامی است");
+    if (!form.username.trim()) return notify("error", "نام کاربری الزامی است");
     if (!form.phoneNumber.trim())
       return notify("error", "شماره تلفن الزامی است");
 
@@ -115,7 +114,10 @@ export default function UpdateUser() {
   };
 
   return (
-    <div className="p-8 mx-16 bg-white/10 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 mt-6" dir="rtl">
+    <div
+      className="p-8 mx-16 bg-white/10 backdrop-blur-lg rounded-2xl shadow-lg border border-white/20 mt-6"
+      dir="rtl"
+    >
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-100">ویرایش کاربر</h2>
         <button

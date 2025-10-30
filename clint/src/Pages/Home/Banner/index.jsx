@@ -15,7 +15,7 @@ export default function Banner() {
     (async () => {
       const response = await fetchData("slider");
       setImg(response?.data);
-      console.log(response)
+      console.log(response);
     })();
   }, []);
 
@@ -35,7 +35,7 @@ export default function Banner() {
   return (
     <div className="w-[90%]  h-[200px] sm:h-[300px] md:h-[360px] lg:h-[420px] mx-auto mt-6 relative">
       <Swiper
-        navigation={{ prevEl: ".custom-next",nextEl: ".custom-prev" }}
+        navigation={{ prevEl: ".custom-next", nextEl: ".custom-prev" }}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         pagination={true}
         modules={[Navigation, Autoplay, Pagination]}
@@ -44,7 +44,6 @@ export default function Banner() {
         {items}
       </Swiper>
 
-      {/* Prev Button */}
       <div className="custom-prev absolute top-1/2 -left-4 sm:-left-6 md:-left-10 lg:-left-14 transform -translate-y-1/2 z-10 cursor-pointer">
         <div className="w-[50px] sm:w-[70px] md:w-[90px] lg:w-[95px] h-[50px] sm:h-[70px] md:h-[90px] lg:h-[95px] rounded-full bg-white  flex items-center justify-center ">
           <div className="w-[40px] sm:w-[60px] md:w-[80px] h-[40px] sm:h-[60px] md:h-[80px] rounded-full bg-[#F7FAFC] flex items-center justify-center">
@@ -66,7 +65,6 @@ export default function Banner() {
         </div>
       </div>
 
-      {/* Next Button */}
       <div className="custom-next absolute top-1/2 -right-4 sm:-right-6 md:-right-10 lg:-right-14 transform -translate-y-1/2 z-10 cursor-pointer">
         <div className="w-[50px] sm:w-[70px] md:w-[90px] lg:w-[95px] h-[50px] sm:h-[70px] md:h-[90px] lg:h-[95px] rounded-full bg-white  flex items-center justify-center">
           <div className="w-[40px] sm:w-[60px] md:w-[80px] h-[40px] sm:h-[60px] md:h-[80px] rounded-full bg-[#F7FAFC] flex items-center justify-center">

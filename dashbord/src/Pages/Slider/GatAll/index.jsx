@@ -9,7 +9,6 @@ export default function GetAllSlider() {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // دریافت لیست اسلایدرها
   useEffect(() => {
     (async () => {
       const result = await fetchData("slider", {
@@ -22,7 +21,6 @@ export default function GetAllSlider() {
     })();
   }, [token]);
 
-  // حذف اسلایدر
   const handleDelete = async (id, image) => {
     const result = await fetchData(`slider/${id}`, {
       method: "DELETE",
@@ -32,7 +30,6 @@ export default function GetAllSlider() {
     if (result.success) {
       notify("success", result.message || "اسلایدر حذف شد");
 
-      // اگر تصویر دارد حذفش کن
       if (image) {
         await fetchData(`upload/${image}`, {
           method: "DELETE",
@@ -79,7 +76,6 @@ export default function GetAllSlider() {
         )}
       </td>
       <td className="px-4 py-5 flex gap-2">
-     
         <button
           onClick={() => handleDelete(s._id, s.image)}
           className="bg-red-500 text-white px-3 py-1.5 rounded-lg hover:scale-105 transition"

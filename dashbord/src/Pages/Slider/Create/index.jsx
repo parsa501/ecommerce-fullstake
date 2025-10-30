@@ -14,7 +14,6 @@ export default function CreateSlider() {
   const navigate = useNavigate();
   const fileRef = useRef();
 
-  // انتخاب تصویر
   const handleImage = (e) => {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -22,7 +21,6 @@ export default function CreateSlider() {
     setPreview(URL.createObjectURL(f));
   };
 
-  // ارسال فرم
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -30,7 +28,6 @@ export default function CreateSlider() {
     try {
       let imageName = "";
 
-      // آپلود تصویر
       if (imageFile) {
         const fd = new FormData();
         fd.append("file", imageFile);
@@ -43,7 +40,6 @@ export default function CreateSlider() {
         imageName = up?.data?.filename || "";
       }
 
-      // ایجاد اسلایدر جدید
       const result = await fetchData("slider", {
         method: "POST",
         body: JSON.stringify({
@@ -80,9 +76,10 @@ export default function CreateSlider() {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* عنوان */}
         <div>
-          <label className="block mb-1 text-sm font-medium">عنوان اسلایدر</label>
+          <label className="block mb-1 text-sm font-medium">
+            عنوان اسلایدر
+          </label>
           <input
             name="title"
             value={fields.title}
@@ -92,7 +89,6 @@ export default function CreateSlider() {
           />
         </div>
 
-        {/* لینک مقصد */}
         <div>
           <label className="block mb-1 text-sm font-medium">لینک مقصد</label>
           <input
@@ -104,9 +100,10 @@ export default function CreateSlider() {
           />
         </div>
 
-        {/* تصویر اسلایدر */}
         <div>
-          <label className="block mb-1 text-sm font-medium">تصویر اسلایدر</label>
+          <label className="block mb-1 text-sm font-medium">
+            تصویر اسلایدر
+          </label>
           <input
             ref={fileRef}
             type="file"
@@ -123,7 +120,6 @@ export default function CreateSlider() {
           )}
         </div>
 
-        {/* دکمه‌ها */}
         <div className="flex gap-3 pt-4">
           <button
             type="button"

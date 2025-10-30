@@ -23,7 +23,6 @@ export const getAll = catchAsync(async (req, res, next) => {
     .limitFields()
     .paginate()
     .populate();
-
   const result = await features.execute();
 
   return res.status(200).json({
@@ -37,7 +36,6 @@ export const getOne = catchAsync(async (req, res, next) => {
     req.role !== "user"
       ? { _id: req.params.id }
       : { userId: req.userId, _id: req.params.id };
-
   const features = new ApiFeatures(Address, req.query, req.role)
     .addManualFilters(filters)
     .filter()
@@ -45,7 +43,6 @@ export const getOne = catchAsync(async (req, res, next) => {
     .limitFields()
     .paginate()
     .populate();
-
   const result = await features.execute();
 
   return res.status(200).json({
@@ -58,15 +55,12 @@ export const getOne = catchAsync(async (req, res, next) => {
 export const update = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const { userId = null, ...updateData } = req.body;
-
   const searchQuery =
     req.role !== "user" ? { _id: id } : { userId: req.userId, _id: id };
-
   const address = await Address.findOneAndUpdate(searchQuery, updateData, {
     new: true,
     runValidators: true,
   });
-
   if (!address)
     return next(new HandleERROR("آدرس مورد نظر یافت نشد یا مجاز نیستید", 404));
 
@@ -79,14 +73,12 @@ export const update = catchAsync(async (req, res, next) => {
 
 export const remove = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-
   const address = await Address.findById(id);
   if (!address) return next(new HandleERROR("آدرس مورد نظر یافت نشد", 404));
 
   if (address.userId.toString() !== req.userId && req.role !== "admin") {
     return next(new HandleERROR("شما مجاز به حذف این آدرس نیستید", 403));
   }
-
   await Address.findByIdAndDelete(id);
 
   const ownerId = address.userId?.toString();
@@ -95,7 +87,7 @@ export const remove = catchAsync(async (req, res, next) => {
       $pull: { addressIds: id },
     });
   }
-
+  
   return res.status(200).json({
     success: true,
     message: "آدرس با موفقیت حذف شد",

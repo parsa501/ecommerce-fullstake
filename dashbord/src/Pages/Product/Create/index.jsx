@@ -24,7 +24,6 @@ export default function CreateProduct() {
   const [previews, setPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // بارگذاری برندها و دسته‌بندی‌ها
   useEffect(() => {
     (async () => {
       const resBrands = await fetchData("brands", {
@@ -45,7 +44,6 @@ export default function CreateProduct() {
     const files = Array.from(e.target.files);
     setImages(files);
 
-    // پیش‌نمایش تصاویر
     const previewsArray = files.map((f) => URL.createObjectURL(f));
     setPreviews(previewsArray);
   };
@@ -54,41 +52,42 @@ export default function CreateProduct() {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      // آپلود تصاویر
-      let uploadedImages = [];
-      for (const img of images) {
-        const fd = new FormData();
-        fd.append("file", img);
-        const up = await fetchData("upload", {
-          method: "POST",
-          body: fd,
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (up?.success && up?.data?.filename) uploadedImages.push(up.data.filename);
-      }
-
-      const result = await fetchData("product", {
+    let uploadedImages = [];
+    for (const img of images) {
+      const fd = new FormData();
+      fd.append("file", img);
+      const up = await fetchData("upload", {
         method: "POST",
-        body: JSON.stringify({ ...fields, images: uploadedImages }),
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: fd,
+        headers: { Authorization: `Bearer ${token}` },
       });
+      if (up?.success && up?.data?.filename)
+        uploadedImages.push(up.data.filename);
+    }
 
-      setLoading(false);
-      if (result.success) {
-        Notify("success", result.message);
-        navigate("/product");
-      } else {
-        Notify("error", result.message || "خطا در ثبت محصول");
-      }
-    } catch (err) {
-      setLoading(false);
-      Notify("error", err.message || "خطا در ارسال");
+    const result = await fetchData("product", {
+      method: "POST",
+      body: JSON.stringify({ ...fields, images: uploadedImages }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setLoading(false);
+    if (result.success) {
+      Notify("success", result.message);
+      navigate("/product");
+    } else {
+      Notify("error", result.message || "خطا در ثبت محصول");
     }
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-3xl mx-auto text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-3xl mx-auto text-gray-200"
+      dir="rtl"
+    >
       <h2 className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text mb-6">
         ثبت محصول جدید
       </h2>
@@ -127,7 +126,9 @@ export default function CreateProduct() {
           >
             <option value="">انتخاب برند</option>
             {brands.map((b) => (
-              <option key={b._id} value={b._id}>{b.title}</option>
+              <option key={b._id} value={b._id}>
+                {b.title}
+              </option>
             ))}
           </select>
         </div>
@@ -142,7 +143,9 @@ export default function CreateProduct() {
           >
             <option value="">انتخاب دسته‌بندی</option>
             {categories.map((c) => (
-              <option key={c._id} value={c._id}>{c.title}</option>
+              <option key={c._id} value={c._id}>
+                {c.title}
+              </option>
             ))}
           </select>
         </div>
@@ -160,7 +163,12 @@ export default function CreateProduct() {
           {previews.length > 0 && (
             <div className="flex gap-2 mt-2 overflow-x-auto">
               {previews.map((p, idx) => (
-                <img key={idx} src={p} alt={`preview-${idx}`} className="w-28 h-28 object-cover rounded-lg" />
+                <img
+                  key={idx}
+                  src={p}
+                  alt={`preview-${idx}`}
+                  className="w-28 h-28 object-cover rounded-lg"
+                />
               ))}
             </div>
           )}
@@ -171,14 +179,20 @@ export default function CreateProduct() {
             type="checkbox"
             name="isPublished"
             checked={fields.isPublished}
-            onChange={(e) => handleChange({ target: { name: "isPublished", value: e.target.checked } })}
+            onChange={(e) =>
+              handleChange({
+                target: { name: "isPublished", value: e.target.checked },
+              })
+            }
           />
           <span>منتشر شود</span>
         </div>
 
         <button
           type="submit"
-          disabled={loading || !fields.title || !fields.brandId || !fields.categoryId}
+          disabled={
+            loading || !fields.title || !fields.brandId || !fields.categoryId
+          }
           className={`w-full px-6 py-3 rounded-lg font-medium transition-all ${
             loading || !fields.title || !fields.brandId || !fields.categoryId
               ? "bg-gray-400 text-gray-500 cursor-not-allowed"

@@ -17,9 +17,7 @@ export default function Categories() {
   const items = categories?.map((e) => (
     <div
       onClick={() =>
-        navigate(
-          `/category-details/${e?._id}/${e?.title.replaceAll(" ", "-")}`
-        )
+        navigate(`/category-details/${e?._id}/${e?.title.replaceAll(" ", "-")}`)
       }
       className="flex flex-col gap-[22px] cursor-pointer mb-6 items-center justify-center"
       key={e._id}

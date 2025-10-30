@@ -132,7 +132,13 @@
  */
 
 import express from "express";
-import { create, getAll, getOne, remove, update } from "../Controllers/VariantCn.js";
+import {
+  create,
+  getAll,
+  getOne,
+  remove,
+  update,
+} from "../Controllers/VariantCn.js";
 
 const variantRouter = express.Router();
 

@@ -25,7 +25,10 @@ export const getAll = catchAsync(async (req, res, next) => {
   result.data = await Product.populate(result.data, [
     { path: "categoryId", select: "title" },
     { path: "brandId", select: "title" },
-    { path: "defaultProductVariantId", select: "price discount priceAfterDiscount" },
+    {
+      path: "defaultProductVariantId",
+      select: "price discount priceAfterDiscount",
+    },
   ]);
 
   return res.status(200).json({
@@ -35,7 +38,6 @@ export const getAll = catchAsync(async (req, res, next) => {
     data: result.data,
   });
 });
-
 
 export const getOne = catchAsync(async (req, res, next) => {
   const { id } = req.params;
@@ -56,12 +58,8 @@ export const getOne = catchAsync(async (req, res, next) => {
 
   if (req?.userId) {
     const user = await User.findById(req.userId);
-    favProduct = user?.favoriteProducts?.some(
-      (pr) => pr.toString() === id
-    );
-    boughtProduct = user?.boughtProducts?.some(
-      (pr) => pr.toString() === id
-    );
+    favProduct = user?.favoriteProducts?.some((pr) => pr.toString() === id);
+    boughtProduct = user?.boughtProducts?.some((pr) => pr.toString() === id);
     ratedProduct = user?.ratedProducts?.some(
       (pr) => pr.productId.toString() === id
     );
@@ -104,9 +102,7 @@ export const favProduct = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("کاربر یافت نشد", 404));
   }
 
-  const alreadyFav = user.favoriteProducts?.some(
-    (pr) => pr.toString() === id
-  );
+  const alreadyFav = user.favoriteProducts?.some((pr) => pr.toString() === id);
 
   if (alreadyFav) {
     user.favoriteProducts = user.favoriteProducts.filter(

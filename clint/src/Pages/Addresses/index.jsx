@@ -33,55 +33,51 @@ export default function CreateAddress() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const v = validate();
-    if (v) return Notify("error", v);
+    const valid = validate();
+    if (valid) return Notify("error", valid);
 
     setLoading(true);
-    try {
-      const payload = {
-        street: fields.street.trim(),
-        city: fields.city.trim(),
-        state: fields.state.trim() || null,
-        postalCode: fields.postalCode.trim() || null,
-        receiverPhoneNumber: fields.receiverPhoneNumber.trim(),
-        receiverFullName: fields.receiverFullName.trim(),
-        pelak: fields.pelak.trim() || null,
-        description: fields.description.trim() || null,
-        label: fields.label.trim() || null,
-      };
 
-      const result = await fetchData("Address", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
+    const payload = {
+      street: fields.street.trim(),
+      city: fields.city.trim(),
+      state: fields.state.trim() || null,
+      postalCode: fields.postalCode.trim() || null,
+      receiverPhoneNumber: fields.receiverPhoneNumber.trim(),
+      receiverFullName: fields.receiverFullName.trim(),
+      pelak: fields.pelak.trim() || null,
+      description: fields.description.trim() || null,
+      label: fields.label.trim() || null,
+    };
+
+    const result = await fetchData("Address", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (result?.success) {
+      Notify("success", result.message || "آدرس با موفقیت ثبت شد.");
+      setFields({
+        street: "",
+        city: "",
+        state: "",
+        postalCode: "",
+        receiverPhoneNumber: "",
+        receiverFullName: "",
+        pelak: "",
+        description: "",
+        label: "",
       });
-
-      if (result?.success) {
-        Notify("success", result.message || "آدرس با موفقیت ثبت شد.");
-        setFields({
-          street: "",
-          city: "",
-          state: "",
-          postalCode: "",
-          receiverPhoneNumber: "",
-          receiverFullName: "",
-          pelak: "",
-          description: "",
-          label: "",
-        });
-        navigate("/order");
-      } else {
-        Notify("error", result?.message || "خطا در ثبت آدرس");
-      }
-    } catch (err) {
-      console.error("CreateAddress error:", err);
-      Notify("error", err?.message || "خطای شبکه رخ داد.");
-    } finally {
-      setLoading(false);
+      navigate("/order");
+    } else {
+      Notify("error", result?.message || "خطا در ثبت آدرس");
     }
+
+    setLoading(false);
   };
 
   return (

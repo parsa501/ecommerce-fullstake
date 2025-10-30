@@ -18,7 +18,8 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: {
         values: ["pending", "success", "failed"],
-        message: "وضعیت سفارش باید یکی از 'pending', 'success' یا 'failed' باشد",
+        message:
+          "وضعیت سفارش باید یکی از 'pending', 'success' یا 'failed' باشد",
       },
       default: "pending",
     },

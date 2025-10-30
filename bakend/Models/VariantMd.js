@@ -6,7 +6,7 @@ const variantSchema = new mongoose.Schema(
       type: String,
       required: [true, "نوع ویژگی الزامی است"],
       enum: {
-        values: ["رنگ", "سایز","کیفیت"],
+        values: ["رنگ", "سایز", "کیفیت"],
         message: "نوع ویژگی باید 'color' یا 'size' باشد",
       },
       trim: true,

@@ -17,7 +17,7 @@ export default function NotFoundPage() {
         className="w-full max-w-[400px] rounded-3xl shadow-2xl mb-8 object-contain"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       />
 
       <motion.p

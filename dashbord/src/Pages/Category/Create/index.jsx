@@ -20,7 +20,6 @@ export default function CreateCategory() {
   const navigate = useNavigate();
   const fileRef = useRef();
 
-  // 📥 گرفتن همه‌ی کتگوری‌ها برای select
   useEffect(() => {
     (async () => {
       const result = await fetchData("category", {
@@ -33,7 +32,6 @@ export default function CreateCategory() {
     })();
   }, [token]);
 
-  // 🖼️ انتخاب تصویر
   const handleImage = (e) => {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -41,7 +39,6 @@ export default function CreateCategory() {
     setPreview(URL.createObjectURL(f));
   };
 
-  // 📤 ارسال فرم
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -97,9 +94,10 @@ export default function CreateCategory() {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* عنوان */}
         <div>
-          <label className="block mb-1 text-sm font-medium">نام دسته‌بندی</label>
+          <label className="block mb-1 text-sm font-medium">
+            نام دسته‌بندی
+          </label>
           <input
             name="title"
             value={fields.title}
@@ -109,7 +107,6 @@ export default function CreateCategory() {
           />
         </div>
 
-        {/* زیرمجموعه (اختیاری) */}
         <div>
           <label className="block mb-1 text-sm font-medium">زیرمجموعه</label>
           <select
@@ -127,10 +124,17 @@ export default function CreateCategory() {
           </select>
         </div>
 
-        {/* تصویر */}
         <div>
-          <label className="block mb-1 text-sm font-medium">تصویر دسته‌بندی</label>
-          <input ref={fileRef} type="file" accept="image/*" onChange={handleImage} className="w-full" />
+          <label className="block mb-1 text-sm font-medium">
+            تصویر دسته‌بندی
+          </label>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImage}
+            className="w-full"
+          />
           {preview && (
             <img
               src={preview}
@@ -140,7 +144,6 @@ export default function CreateCategory() {
           )}
         </div>
 
-        {/* منتشر شود */}
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
@@ -155,7 +158,6 @@ export default function CreateCategory() {
           <span>منتشر شود</span>
         </div>
 
-        {/* دکمه‌ها */}
         <div className="flex gap-3 pt-4">
           <button
             type="button"

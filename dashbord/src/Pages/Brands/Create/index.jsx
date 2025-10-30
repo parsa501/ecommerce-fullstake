@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react"; 
+import React, { useContext, useRef, useState } from "react";
 import useFormFields from "../../../Utils/useFormFields";
 import fetchData from "../../../Utils/fetchData";
 import { AuthContext } from "../../../Context/AuthContext";
@@ -6,7 +6,10 @@ import notify from "../../../Utils/Notify";
 import { useNavigate } from "react-router-dom";
 
 export default function CreateBrands() {
-  const [fields, handleChange] = useFormFields({ title: "", isPublished: false });
+  const [fields, handleChange] = useFormFields({
+    title: "",
+    isPublished: false,
+  });
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -47,7 +50,10 @@ export default function CreateBrands() {
           image: imageName,
           isPublished: !!fields.isPublished,
         }),
-        headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` },
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
       });
 
       setLoading(false);
@@ -64,7 +70,10 @@ export default function CreateBrands() {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200"
+      dir="rtl"
+    >
       <h2 className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text mb-6">
         ثبت برند جدید
       </h2>
@@ -83,8 +92,20 @@ export default function CreateBrands() {
 
         <div>
           <label className="block mb-1 text-sm font-medium">تصویر برند</label>
-          <input ref={fileRef} type="file" accept="image/*" onChange={handleImage} className="w-full" />
-          {preview && <img src={preview} alt="preview" className="w-28 h-28 object-cover mt-2 rounded-lg" />}
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImage}
+            className="w-full"
+          />
+          {preview && (
+            <img
+              src={preview}
+              alt="preview"
+              className="w-28 h-28 object-cover mt-2 rounded-lg"
+            />
+          )}
         </div>
 
         <div className="flex items-center gap-2">
@@ -92,7 +113,11 @@ export default function CreateBrands() {
             type="checkbox"
             name="isPublished"
             checked={fields.isPublished}
-            onChange={(e) => handleChange({ target: { name: "isPublished", value: e.target.checked } })}
+            onChange={(e) =>
+              handleChange({
+                target: { name: "isPublished", value: e.target.checked },
+              })
+            }
           />
           <span>منتشر شود</span>
         </div>

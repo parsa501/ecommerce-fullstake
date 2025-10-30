@@ -181,6 +181,5 @@ export const Search = catchAsync(async (req, res, next) => {
       total: categoriesCount,
     });
   }
-
   return next(new HandleERROR("نوع جستجو نامعتبر است.", 400));
 });

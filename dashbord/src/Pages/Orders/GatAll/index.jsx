@@ -66,7 +66,6 @@ export default function GetAllOrders() {
                 </span>
               </div>
 
-              {/* Info */}
               <div className="text-sm text-gray-300 space-y-1">
                 <p>
                   مبلغ کل:{" "}
@@ -98,7 +97,6 @@ export default function GetAllOrders() {
                 </p>
               </div>
 
-              {/* Buttons */}
               <div className="flex justify-end gap-2 mt-3">
                 <button
                   onClick={() => handleEdit(order._id)}

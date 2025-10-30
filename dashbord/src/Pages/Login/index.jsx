@@ -1,5 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
-import { MdEmail, MdLock, MdCheckCircle, MdError, MdAdminPanelSettings } from "react-icons/md";
+import {
+  MdEmail,
+  MdLock,
+  MdCheckCircle,
+  MdError,
+  MdAdminPanelSettings,
+} from "react-icons/md";
 import notify from "../../Utils/Notify";
 import useFormFields from "../../Utils/useFormFields";
 import { AuthContext } from "../../Context/AuthContext";
@@ -52,7 +58,6 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* فیلد ایمیل */}
             <div>
               <label
                 htmlFor="email"
@@ -75,7 +80,6 @@ export default function Login() {
               </div>
             </div>
 
-            {/* فیلد رمز عبور */}
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label
@@ -106,7 +110,6 @@ export default function Login() {
               </div>
             </div>
 
-            {/* دکمه ارسال */}
             <button
               type="submit"
               className="w-full py-3 px-4 rounded-lg font-bold text-white bg-gradient-to-r from-cyan-400 to-purple-500 shadow-lg hover:scale-105 active:scale-95 transition-all duration-300"

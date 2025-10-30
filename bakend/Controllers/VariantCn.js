@@ -18,8 +18,8 @@ export const getAll = catchAsync(async (req, res, next) => {
     .limitFields()
     .paginate()
     .populate();
-
   const result = await features.execute();
+  
   return res.status(200).json({
     success: true,
     message: "لیست واریانت‌ها با موفقیت دریافت شد",
@@ -66,7 +66,10 @@ export const remove = catchAsync(async (req, res, next) => {
   const products = await ProductVariant.find({ variantId: id });
   if (products.length > 0) {
     return next(
-      new HandleERROR("نمی‌توان واریانتی که به محصولی مرتبط است را حذف کرد", 400)
+      new HandleERROR(
+        "نمی‌توان واریانتی که به محصولی مرتبط است را حذف کرد",
+        400
+      )
     );
   }
 

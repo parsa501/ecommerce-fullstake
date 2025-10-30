@@ -35,13 +35,14 @@ export default function FrequentlyBoughtTogether() {
       </div>
 
       <div className="flex flex-col md:flex-row mt-8 border border-gray-300">
-        {/* محصول اصلی */}
         <div className="relative p-6 border border-gray-300 md:w-[30%] w-full">
           {products[0] && (
             <div
               onClick={() =>
                 navigate(
-                  `/products-details/${products[0]?._id}/${products[0]?.title?.replaceAll(" ", "-")}`
+                  `/products-details/${
+                    products[0]?._id
+                  }/${products[0]?.title?.replaceAll(" ", "-")}`
                 )
               }
               className="cursor-pointer"
@@ -87,13 +88,15 @@ export default function FrequentlyBoughtTogether() {
           )}
         </div>
 
-        {/* محصولات کناری */}
         <div className="md:w-[70%] w-full flex flex-wrap">
           {[...products.slice(1, 9)].map((item) => (
             <div
               onClick={() =>
                 navigate(
-                  `/products-details/${item?._id}/${item?.title?.replaceAll(" ", "-")}`
+                  `/products-details/${item?._id}/${item?.title?.replaceAll(
+                    " ",
+                    "-"
+                  )}`
                 )
               }
               key={item?._id}

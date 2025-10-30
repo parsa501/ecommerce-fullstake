@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      unique: [true,"ایمل شما قبلا وجود داشته است"],
+      unique: [true, "ایمل شما قبلا وجود داشته است"],
       sparse: true,
       match: [/\S+@\S+\.\S+/, "آدرس ایمیل معتبر نیست"],
       trim: true,

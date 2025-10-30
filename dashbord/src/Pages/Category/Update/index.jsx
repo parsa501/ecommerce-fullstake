@@ -10,7 +10,11 @@ export default function UpdateCategory() {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [fields, handleChange] = useFormFields({ title: "", isPublished: false, subCategory: "" });
+  const [fields, handleChange] = useFormFields({
+    title: "",
+    isPublished: false,
+    subCategory: "",
+  });
   const [categories, setCategories] = useState([]);
   const [oldImage, setOldImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
@@ -18,7 +22,6 @@ export default function UpdateCategory() {
   const [loading, setLoading] = useState(false);
   const fileRef = useRef();
 
-  // 📥 گرفتن دسته‌بندی برای فرم و لیست زیرمجموعه
   useEffect(() => {
     (async () => {
       const resCategories = await fetchData("category", {
@@ -33,10 +36,15 @@ export default function UpdateCategory() {
       if (resCategory.success && resCategory.data.length > 0) {
         const category = resCategory.data[0];
         handleChange({ target: { name: "title", value: category.title } });
-        handleChange({ target: { name: "isPublished", value: category.isPublished } });
-        handleChange({ target: { name: "subCategory", value: category.subCategory || "" } });
+        handleChange({
+          target: { name: "isPublished", value: category.isPublished },
+        });
+        handleChange({
+          target: { name: "subCategory", value: category.subCategory || "" },
+        });
         setOldImage(category.image);
-        if (category.image) setPreview(import.meta.env.VITE_BASE_FILE + category.image);
+        if (category.image)
+          setPreview(import.meta.env.VITE_BASE_FILE + category.image);
       } else {
         notify("error", resCategory.message || "دسته‌بندی یافت نشد");
         navigate("/category");
@@ -59,7 +67,10 @@ export default function UpdateCategory() {
         await fetchData("upload", {
           method: "DELETE",
           body: JSON.stringify({ filename: oldImage }),
-          headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` },
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
         });
         notify("success", "تصویر قبلی حذف شد");
       } catch (err) {
@@ -127,14 +138,19 @@ export default function UpdateCategory() {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200"
+      dir="rtl"
+    >
       <h2 className="text-2xl font-extrabold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text mb-6">
         ویرایش دسته‌بندی
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block mb-1 text-sm font-medium">نام دسته‌بندی</label>
+          <label className="block mb-1 text-sm font-medium">
+            نام دسته‌بندی
+          </label>
           <input
             name="title"
             value={fields.title}
@@ -145,12 +161,28 @@ export default function UpdateCategory() {
         </div>
 
         <div>
-          <label className="block mb-1 text-sm font-medium">تصویر دسته‌بندی</label>
-          <input ref={fileRef} type="file" accept="image/*" onChange={handleImage} className="w-full" />
+          <label className="block mb-1 text-sm font-medium">
+            تصویر دسته‌بندی
+          </label>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImage}
+            className="w-full"
+          />
           {preview && (
             <div className="relative mt-2 w-28 h-28">
-              <img src={preview} alt="preview" className="w-full h-full object-cover rounded-lg" />
-              <button type="button" onClick={handleRemoveImage} className="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 rounded-br-lg text-xs hover:bg-red-600">
+              <img
+                src={preview}
+                alt="preview"
+                className="w-full h-full object-cover rounded-lg"
+              />
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                className="absolute top-0 left-0 bg-red-500 text-white px-2 py-1 rounded-br-lg text-xs hover:bg-red-600"
+              >
                 حذف
               </button>
             </div>
@@ -158,7 +190,9 @@ export default function UpdateCategory() {
         </div>
 
         <div>
-          <label className="block mb-1 text-sm font-medium">زیرمجموعه (اختیاری)</label>
+          <label className="block mb-1 text-sm font-medium">
+            زیرمجموعه (اختیاری)
+          </label>
           <select
             name="subCategory"
             value={fields.subCategory}
@@ -167,7 +201,7 @@ export default function UpdateCategory() {
           >
             <option value="">اصلی</option>
             {categories
-              .filter((c) => c._id !== id) // جلوگیری از انتخاب خود دسته‌بندی
+              .filter((c) => c._id !== id)
               .map((c) => (
                 <option key={c._id} value={c._id}>
                   {c.title}
@@ -181,13 +215,21 @@ export default function UpdateCategory() {
             type="checkbox"
             name="isPublished"
             checked={fields.isPublished}
-            onChange={(e) => handleChange({ target: { name: "isPublished", value: e.target.checked } })}
+            onChange={(e) =>
+              handleChange({
+                target: { name: "isPublished", value: e.target.checked },
+              })
+            }
           />
           <span>منتشر شود</span>
         </div>
 
         <div className="flex gap-3 pt-4">
-          <button type="button" onClick={() => navigate("/category")} className="px-5 py-3 border border-white/20 rounded-lg hover:bg-white/10 text-gray-200">
+          <button
+            type="button"
+            onClick={() => navigate("/category")}
+            className="px-5 py-3 border border-white/20 rounded-lg hover:bg-white/10 text-gray-200"
+          >
             انصراف
           </button>
 

@@ -32,7 +32,6 @@ export default function Navbar() {
 
   return (
     <div dir="rtl" className="font-[Vazir] bg-white">
-      {/* نوار بالایی */}
       <div className="px-[5%] h-[42px] bg-black text-white flex justify-center sm:justify-between items-center sm:px-[8%]">
         <p className="text-[14px]">به فروشگاه بزرگ ما خوش آمدید!</p>
         <div className="flex gap-4 items-center">
@@ -46,7 +45,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* نوار اصلی - دسکتاپ */}
       <div className="hidden md:flex h-[90px] px-[8%] items-center justify-between bg-white shadow-sm">
         <span
           className="text-black w-[48px] h-[48px] bg-[#F3F9FB] flex items-center justify-center text-[24px] rounded-[12px] shadow-sm cursor-pointer hover:bg-gray-100 transition"
@@ -71,8 +69,12 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center justify-center text-[15px]">
-          <h3   onClick={() => navigate("/userquestions")} className="flex items-center gap-1 text-[#FC7901] cursor-pointer hover:text-orange-600 transition">
-            <FaRegHandshake className="text-[20px]" />سوالات کاربران
+          <h3
+            onClick={() => navigate("/userquestions")}
+            className="flex items-center gap-1 text-[#FC7901] cursor-pointer hover:text-orange-600 transition"
+          >
+            <FaRegHandshake className="text-[20px]" />
+            سوالات کاربران
           </h3>
           <span className="mx-4 text-gray-300">|</span>
           <h3
@@ -98,7 +100,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* نوار موبایل */}
       <div className="flex md:hidden h-[70px] px-[4%] items-center justify-between border-b">
         <span
           className="text-black w-[42px] h-[42px] bg-[#F3F9FB] flex items-center justify-center text-[22px] rounded-[10px] shadow-sm cursor-pointer"
@@ -111,7 +112,7 @@ export default function Navbar() {
           onClick={() => navigate("/")}
           className="text-[26px] cursor-pointer font-extrabold text-gray-800"
         >
-         دیجی‌شاپ
+          دیجی‌شاپ
         </h1>
 
         <div
@@ -127,7 +128,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* منوی بازشونده موبایل */}
       {menuOpen && (
         <div className="md:hidden bg-[#F9FAFB] px-[6%] py-3 flex flex-col gap-3 border-b animate-fadeIn">
           <SearchBar
@@ -159,7 +159,6 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* منوی دسته‌بندی‌ها در دسکتاپ */}
       <div className="hidden md:flex h-[70px] px-[4%] sm:px-[8%] border-t border-b border-gray-200 items-center justify-between overflow-x-auto">
         <button
           onClick={() => navigate("/category")}

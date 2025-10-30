@@ -20,7 +20,9 @@ export default function Profile() {
     },
     validationSchema: Yup.object({
       username: Yup.string().required("نام کاربری الزامی است"),
-      email: Yup.string().email("ایمیل نامعتبر است").required("ایمیل الزامی است"),
+      email: Yup.string()
+        .email("ایمیل نامعتبر است")
+        .required("ایمیل الزامی است"),
       password: Yup.string().min(8, "رمز عبور حداقل ۸ کاراکتر باشد"),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
@@ -53,21 +55,26 @@ export default function Profile() {
   });
 
   return (
-    <div className="w-[90%] flex flex-col md:flex-row-reverse px-[5%] mt-20 gap-10" dir="rtl">
-      {/* تصویر کاربر */}
+    <div
+      className="w-[90%] flex flex-col md:flex-row-reverse px-[5%] mt-20 gap-10"
+      dir="rtl"
+    >
       <div className="flex-3/4">
-        <img src={assets.Profile} alt="پروفایل" className="rounded-2xl shadow-lg" />
+        <img
+          src={assets.Profile}
+          alt="پروفایل"
+          className="rounded-2xl shadow-lg"
+        />
       </div>
 
-      {/* فرم و اطلاعات پروفایل */}
       <div className="flex-1/4 my-8">
         <h1 className="text-3xl font-bold mb-4 text-right">ویرایش پروفایل</h1>
         <p className="text-gray-600 mb-6 text-right">
-          لطفاً اطلاعات پروفایل خود را تکمیل و به‌روزرسانی کنید. نام کاربری و ایمیل الزامی است، رمز عبور جدید در صورت تمایل وارد شود.
+          لطفاً اطلاعات پروفایل خود را تکمیل و به‌روزرسانی کنید. نام کاربری و
+          ایمیل الزامی است، رمز عبور جدید در صورت تمایل وارد شود.
         </p>
 
         <form onSubmit={formik.handleSubmit} className="space-y-6 text-right">
-          {/* نام کاربری */}
           <div>
             <label className="block mb-1 font-semibold">نام کاربری</label>
             <input
@@ -78,11 +85,12 @@ export default function Profile() {
               {...formik.getFieldProps("username")}
             />
             {formik.touched.username && formik.errors.username && (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.username}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.username}
+              </div>
             )}
           </div>
 
-          {/* ایمیل */}
           <div>
             <label className="block mb-1 font-semibold">ایمیل</label>
             <input
@@ -93,11 +101,12 @@ export default function Profile() {
               {...formik.getFieldProps("email")}
             />
             {formik.touched.email && formik.errors.email && (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.email}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.email}
+              </div>
             )}
           </div>
 
-          {/* رمز عبور */}
           <div>
             <label className="block mb-1 font-semibold">رمز عبور جدید</label>
             <input
@@ -108,11 +117,12 @@ export default function Profile() {
               {...formik.getFieldProps("password")}
             />
             {formik.touched.password && formik.errors.password && (
-              <div className="text-red-500 text-sm mt-1">{formik.errors.password}</div>
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.password}
+              </div>
             )}
           </div>
 
-          {/* نقش کاربری فقط برای superAdmin */}
           {user?.role === "superAdmin" && (
             <div>
               <label className="block mb-1 font-semibold">نقش کاربری</label>
@@ -128,7 +138,6 @@ export default function Profile() {
             </div>
           )}
 
-          {/* دکمه‌ها */}
           <button
             type="submit"
             disabled={formik.isSubmitting}

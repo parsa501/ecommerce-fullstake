@@ -31,45 +31,46 @@ export default function CreateTestimonial() {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      let imageName = "";
+    let imageName = "";
 
-      if (imageFile) {
-        const fd = new FormData();
-        fd.append("file", imageFile);
-        const up = await fetchData("upload", {
-          method: "POST",
-          body: fd,
-          headers: { authorization: `Bearer ${token}` },
-        });
-
-        imageName = up?.data?.filename || "";
-      }
-
-      const result = await fetchData("testimonial", {
+    if (imageFile) {
+      const fd = new FormData();
+      fd.append("file", imageFile);
+      const up = await fetchData("upload", {
         method: "POST",
-        body: JSON.stringify({
-          ...fields,
-          image: imageName,
-        }),
-        headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` },
+        body: fd,
+        headers: { authorization: `Bearer ${token}` },
       });
 
-      setLoading(false);
-      if (result.success) {
-        notify("success", result.message || "تستیمونیال با موفقیت ایجاد شد");
-        navigate("/testimonial");
-      } else {
-        notify("error", result.message || "خطا در ایجاد تستیمونیال");
-      }
-    } catch (err) {
-      setLoading(false);
-      notify("error", err.message || "خطا در ارسال داده");
+      imageName = up?.data?.filename || "";
+    }
+
+    const result = await fetchData("testimonial", {
+      method: "POST",
+      body: JSON.stringify({
+        ...fields,
+        image: imageName,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    });
+
+    setLoading(false);
+    if (result.success) {
+      notify("success", result.message || "تستیمونیال با موفقیت ایجاد شد");
+      navigate("/testimonial");
+    } else {
+      notify("error", result.message || "خطا در ایجاد تستیمونیال");
     }
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200"
+      dir="rtl"
+    >
       <h2 className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text mb-6">
         ثبت تستیمونیال جدید
       </h2>
@@ -111,8 +112,20 @@ export default function CreateTestimonial() {
 
         <div>
           <label className="block mb-1 text-sm font-medium">تصویر مشتری</label>
-          <input ref={fileRef} type="file" accept="image/*" onChange={handleImage} className="w-full" />
-          {preview && <img src={preview} alt="preview" className="w-28 h-28 object-cover mt-2 rounded-lg" />}
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImage}
+            className="w-full"
+          />
+          {preview && (
+            <img
+              src={preview}
+              alt="preview"
+              className="w-28 h-28 object-cover mt-2 rounded-lg"
+            />
+          )}
         </div>
 
         <div className="flex items-center gap-2">
@@ -120,7 +133,11 @@ export default function CreateTestimonial() {
             type="checkbox"
             name="isPublished"
             checked={fields.isPublished}
-            onChange={(e) => handleChange({ target: { name: "isPublished", value: e.target.checked } })}
+            onChange={(e) =>
+              handleChange({
+                target: { name: "isPublished", value: e.target.checked },
+              })
+            }
             className="accent-cyan-400 w-5 h-5"
           />
           <label className="text-gray-200 text-sm">منتشر شود</label>

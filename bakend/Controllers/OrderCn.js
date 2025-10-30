@@ -117,23 +117,6 @@ export const payment = catchAsync(async (req, res, next) => {
     }
   }
 
-    // === جایگزین کردن این بلوک مشکل‌ساز ===
-  // let newTotalPrice = 0;
-  // let newTotalPriceAfterDiscount = 0;
-  // let changeQuantity = false;
-  //
-  // let newCart = cart.items.filter((item) => {
-  //   if (item.cartQuantity > item.productVariantId?.quantity) {
-  //     changeQuantity = true;
-  //     if (item.productVariantId?.quantity == 0) return false;
-  //     item.cartQuantity = item.productVariantId?.quantity;
-  //     newTotalPrice += item.cartQuantity * item.productVariantId?.price;
-  //     newTotalPriceAfterDiscount +=
-  //       item.cartQuantity * item.productVariantId?.priceAfterDiscount;
-  //   }
-  // });
-
-  // === به این بلوک امن و درست تغییر بده ===
   let newTotalPrice = 0;
   let newTotalPriceAfterDiscount = 0;
   let changeQuantity = false;
@@ -141,7 +124,6 @@ export const payment = catchAsync(async (req, res, next) => {
   const newCart = [];
 
   for (const item of cart.items) {
-    // محافظت در برابر داده‌های ناقص
     const pv = item.productVariantId || {};
     const availableQty = Number(pv.quantity ?? 0);
     const price = Number(pv.price ?? item.price ?? 0);
@@ -149,39 +131,30 @@ export const payment = catchAsync(async (req, res, next) => {
       pv.priceAfterDiscount ?? item.priceAfterDiscount ?? price
     );
 
-    // اگر کاربر خواسته تعداد بیشتری برداره از موجودی،
-    // تعداد را به موجودی اصلاح کن
     let qty = Number(item.cartQuantity ?? 0);
     if (qty > availableQty) {
       changeQuantity = true;
       qty = availableQty;
     }
 
-    // اگر موجودی صفره آیتم حذف می‌شود (skip)
     if (qty <= 0) {
-      // عمداً نپوش می‌کنیم تا از لیست حذف شود
       continue;
     }
 
-    // بروزرسانی مقدار محلی آیتم (توجه: اگر لازم است آبجکت اصلی را تغییر بدی، می‌تونی اینجا تنظیم کنی)
     const normalizedItem = {
-      ...item.toObject?.() /* اگر Mongoose doc هست */,
+      ...item.toObject?.(),
       cartQuantity: qty,
-      // تضمین ساختار productVariantId به‌عنوان آبجکت (در صورت نیاز)
       productVariantId: pv,
       price,
       priceAfterDiscount,
     };
 
-    // اضافه کردن به newCart
     newCart.push(normalizedItem);
 
-    // محاسبه totals برای همه آیتم‌های باقی‌مانده
     newTotalPrice += qty * price;
     newTotalPriceAfterDiscount += qty * priceAfterDiscount;
   }
 
-  // اگر تغییری رخ داده یا totals متفاوت بود، کارت به‌روزرسانی می‌شود و کاربر پیغام می‌بیند
   if (
     changeQuantity ||
     newTotalPriceAfterDiscount !== cart.totalPriceAfterDiscount ||
@@ -197,7 +170,6 @@ export const payment = catchAsync(async (req, res, next) => {
       data: updatedCart,
     });
   }
-
 
   let paymentPrice = !discount
     ? newTotalPriceAfterDiscount

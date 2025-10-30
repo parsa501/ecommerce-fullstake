@@ -26,14 +26,15 @@ export const getAll = catchAsync(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: "لیست دسته‌بندی‌ها با موفقیت دریافت شد",
-    ...result
+    ...result,
   });
 });
 
 export const getOne = catchAsync(async (req, res, next) => {
-  const filters = req.role === "admin"
-    ? { _id: req.params.id }
-    : { isPublished: true, _id: req.params.id };
+  const filters =
+    req.role === "admin"
+      ? { _id: req.params.id }
+      : { isPublished: true, _id: req.params.id };
 
   const features = new ApiFeatures(Category, req.query, req.role)
     .addManualFilters(filters)
@@ -47,7 +48,7 @@ export const getOne = catchAsync(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: "دسته‌بندی مورد نظر با موفقیت دریافت شد",
-    ...result
+    ...result,
   });
 });
 
@@ -77,7 +78,10 @@ export const remove = catchAsync(async (req, res, next) => {
 
   if (products.length > 0 || subCategories.length > 0) {
     return next(
-      new HandleERROR("امکان حذف دسته‌بندی دارای محصول یا زیرمجموعه وجود ندارد", 400)
+      new HandleERROR(
+        "امکان حذف دسته‌بندی دارای محصول یا زیرمجموعه وجود ندارد",
+        400
+      )
     );
   }
 

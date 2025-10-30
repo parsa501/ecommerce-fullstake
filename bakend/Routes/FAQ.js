@@ -179,12 +179,18 @@
  *           format: date-time
  */
 
-import express from 'express';
-import { create, getAll, getOne, remove, update } from '../Controllers/FAQCn.js';
+import express from "express";
+import {
+  create,
+  getAll,
+  getOne,
+  remove,
+  update,
+} from "../Controllers/FAQCn.js";
 
 const faqRouter = express.Router();
 
-faqRouter.route('/').post( create).get(getAll);
-faqRouter.route('/:id').get(getOne).patch(update).delete( remove);
+faqRouter.route("/").post(create).get(getAll);
+faqRouter.route("/:id").get(getOne).patch(update).delete(remove);
 
 export default faqRouter;

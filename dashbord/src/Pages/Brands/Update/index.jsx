@@ -10,7 +10,10 @@ export default function UpdateBrands() {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [fields, handleChange] = useFormFields({ title: "", isPublished: false });
+  const [fields, handleChange] = useFormFields({
+    title: "",
+    isPublished: false,
+  });
   const [oldImage, setOldImage] = React.useState(null);
   const [imageFile, setImageFile] = React.useState(null);
   const [preview, setPreview] = React.useState(null);
@@ -26,9 +29,12 @@ export default function UpdateBrands() {
       if (result.success && result.data.length > 0) {
         const brand = result.data[0];
         handleChange({ target: { name: "title", value: brand.title } });
-        handleChange({ target: { name: "isPublished", value: brand.isPublished } });
+        handleChange({
+          target: { name: "isPublished", value: brand.isPublished },
+        });
         setOldImage(brand.image);
-        if (brand.image) setPreview(import.meta.env.VITE_BASE_FILE + brand.image);
+        if (brand.image)
+          setPreview(import.meta.env.VITE_BASE_FILE + brand.image);
       } else {
         notify("error", result.message || "برند یافت نشد");
         navigate("/brands");
@@ -43,32 +49,31 @@ export default function UpdateBrands() {
     setPreview(URL.createObjectURL(f));
   };
 
- const handleRemoveImage = async () => {
-  if (!oldImage && !imageFile) return;
+  const handleRemoveImage = async () => {
+    if (!oldImage && !imageFile) return;
 
-  if (oldImage) {
-    try {
-      await fetchData("upload", {
-        method: "DELETE",
-        body: JSON.stringify({ filename: oldImage }), // ← مهم
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-      });
-      notify("success", "تصویر قبلی حذف شد");
-    } catch (err) {
-      notify("error", "خطا در حذف تصویر قبلی");
-      return;
+    if (oldImage) {
+      try {
+        await fetchData("upload", {
+          method: "DELETE",
+          body: JSON.stringify({ filename: oldImage }), // ← مهم
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+        });
+        notify("success", "تصویر قبلی حذف شد");
+      } catch (err) {
+        notify("error", "خطا در حذف تصویر قبلی");
+        return;
+      }
     }
-  }
 
-  setOldImage(null);
-  setImageFile(null);
-  setPreview(null);
-  if (fileRef.current) fileRef.current.value = "";
-};
-
+    setOldImage(null);
+    setImageFile(null);
+    setPreview(null);
+    if (fileRef.current) fileRef.current.value = "";
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -122,7 +127,10 @@ export default function UpdateBrands() {
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-200"
+      dir="rtl"
+    >
       <h2 className="text-2xl font-extrabold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text mb-6">
         ویرایش برند
       </h2>
@@ -172,7 +180,9 @@ export default function UpdateBrands() {
             name="isPublished"
             checked={fields.isPublished}
             onChange={(e) =>
-              handleChange({ target: { name: "isPublished", value: e.target.checked } })
+              handleChange({
+                target: { name: "isPublished", value: e.target.checked },
+              })
             }
           />
           <span>منتشر شود</span>

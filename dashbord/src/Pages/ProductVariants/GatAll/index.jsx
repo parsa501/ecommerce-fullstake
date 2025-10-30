@@ -33,7 +33,10 @@ export default function GetAllProductVariants() {
   }, []);
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 text-gray-200"
+      dir="rtl"
+    >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text">
           لیست ویژگی‌های محصولات
@@ -66,10 +69,19 @@ export default function GetAllProductVariants() {
             </thead>
             <tbody>
               {productVariants.map((pv, idx) => (
-                <tr key={pv._id} className="border-b border-white/20 hover:bg-white/5 transition">
+                <tr
+                  key={pv._id}
+                  className="border-b border-white/20 hover:bg-white/5 transition"
+                >
                   <td className="px-4 py-2">{idx + 1}</td>
-                  <td className="px-4 py-2">{pv.productId?.title || "نامشخص"}</td>
-                  <td className="px-4 py-2">{pv.variantId ? `${pv.variantId.type} - ${pv.variantId.value}` : "نامشخص"}</td>
+                  <td className="px-4 py-2">
+                    {pv.productId?.title || "نامشخص"}
+                  </td>
+                  <td className="px-4 py-2">
+                    {pv.variantId
+                      ? `${pv.variantId.type} - ${pv.variantId.value}`
+                      : "نامشخص"}
+                  </td>
                   <td className="px-4 py-2">{pv.price}</td>
                   <td className="px-4 py-2">{pv.discount}</td>
                   <td className="px-4 py-2">{pv.quantity}</td>

@@ -239,7 +239,6 @@ const router = createBrowserRouter([
             path: "update/:id",
             element: <UpdateComments />,
           },
-         
         ],
       },
       {
@@ -272,7 +271,6 @@ const router = createBrowserRouter([
             path: "update/:id",
             element: <UpdateOrders />,
           },
-         
         ],
       },
       {

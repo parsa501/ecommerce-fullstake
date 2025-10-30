@@ -22,14 +22,12 @@ export default function UpdateDiscount() {
     isPublished: true,
   });
 
-  // دریافت داده تخفیف برای ویرایش
   useEffect(() => {
     (async () => {
       const result = await fetchData(`discount/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (result.success && result.data) {
-        // پر کردن فرم با داده‌ها
         setFields({
           ...result.data,
           startTime: result.data.startTime
@@ -46,7 +44,6 @@ export default function UpdateDiscount() {
     })();
   }, [id, token]);
 
-  // ارسال تغییرات
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -77,7 +74,6 @@ export default function UpdateDiscount() {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* کد تخفیف */}
         <input
           type="text"
           name="code"
@@ -87,11 +83,8 @@ export default function UpdateDiscount() {
           className="w-full bg-white/5 border border-white/20 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400 text-gray-100 placeholder-gray-400"
         />
 
-        {/* نوع تخفیف */}
         <div>
-          <label className="block mb-1 text-sm font-medium">
-            نوع تخفیف
-          </label>
+          <label className="block mb-1 text-sm font-medium">نوع تخفیف</label>
           <select
             name="discountType"
             value={fields.discountType}
@@ -103,7 +96,6 @@ export default function UpdateDiscount() {
           </select>
         </div>
 
-        {/* مقدار */}
         <input
           type="number"
           name="value"
@@ -113,12 +105,9 @@ export default function UpdateDiscount() {
           className="w-full bg-white/5 border border-white/20 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400 text-gray-100 placeholder-gray-400"
         />
 
-        {/* تاریخ شروع و پایان */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block mb-1 text-sm font-medium">
-              تاریخ شروع
-            </label>
+            <label className="block mb-1 text-sm font-medium">تاریخ شروع</label>
             <input
               type="datetime-local"
               name="startTime"
@@ -141,7 +130,6 @@ export default function UpdateDiscount() {
           </div>
         </div>
 
-        {/* حداقل و حداکثر مبلغ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <input
             type="number"
@@ -161,7 +149,6 @@ export default function UpdateDiscount() {
           />
         </div>
 
-        {/* حداکثر تعداد استفاده */}
         <input
           type="number"
           name="maxUsedCount"
@@ -171,7 +158,6 @@ export default function UpdateDiscount() {
           className="w-full bg-white/5 border border-white/20 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400 text-gray-100 placeholder-gray-400"
         />
 
-        {/* وضعیت انتشار */}
         <div className="flex items-center gap-2">
           <input
             type="checkbox"

@@ -93,7 +93,6 @@ export const remove = catchAsync(async (req, res, next) => {
   });
 });
 
-
 export const checkCode = (discount, totalPrice, userId) => {
   if (!discount?.isPublish)
     return { success: false, message: "این کد تخفیف در دسترس نیست" };
@@ -120,7 +119,10 @@ export const checkCode = (discount, totalPrice, userId) => {
     };
 
   if (discount.expireTime < Date.now() || discount.startTime > Date.now())
-    return { success: false, message: "این کد تخفیف منقضی شده یا هنوز فعال نیست" };
+    return {
+      success: false,
+      message: "این کد تخفیف منقضی شده یا هنوز فعال نیست",
+    };
 
   return { success: true, message: "کد تخفیف معتبر است" };
 };

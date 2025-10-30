@@ -18,7 +18,6 @@ export default function GetAllComments() {
   };
 
   const handleDelete = async (id) => {
-
     const result = await fetchData(`comments/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
@@ -35,12 +34,14 @@ export default function GetAllComments() {
   }, [token]);
 
   return (
-    <div className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 text-gray-200" dir="rtl">
+    <div
+      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 text-gray-200"
+      dir="rtl"
+    >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text">
           لیست کامنت‌ها
         </h2>
-       
       </div>
 
       {comments.length === 0 ? (
@@ -62,12 +63,17 @@ export default function GetAllComments() {
             </thead>
             <tbody>
               {comments.map((c, idx) => (
-                <tr key={c._id} className="border-b border-white/20 hover:bg-white/5 transition">
+                <tr
+                  key={c._id}
+                  className="border-b border-white/20 hover:bg-white/5 transition"
+                >
                   <td className="px-4 py-2">{idx + 1}</td>
                   <td className="px-4 py-2">{c?.productId?.title || "-"}</td>
                   <td className="px-4 py-2">{c.content}</td>
                   <td className="px-4 py-2">{c.rating}</td>
-                  <td className="px-4 py-2">{c.isPublished ? "✅ بله" : "❌ خیر"}</td>
+                  <td className="px-4 py-2">
+                    {c.isPublished ? "✅ بله" : "❌ خیر"}
+                  </td>
                   <td className="px-4 py-2 flex gap-2">
                     <button
                       onClick={() => navigate(`update/${c._id}`)}

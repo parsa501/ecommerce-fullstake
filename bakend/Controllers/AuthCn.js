@@ -5,7 +5,6 @@ import bcryptjs from "bcryptjs";
 import { sendAuthCode, verifyCode } from "../Utils/SmsHandler.js";
 import Cart from "../Models/CartMd.js";
 
-// شروع فرآیند احراز هویت با شماره موبایل
 export const auth = catchAsync(async (req, res, next) => {
   const { phoneNumber = null } = req.body;
 
@@ -31,7 +30,6 @@ export const auth = catchAsync(async (req, res, next) => {
   });
 });
 
-// ورود با کد یکبار مصرف (OTP)
 export const loginWithOtp = catchAsync(async (req, res, next) => {
   const { phoneNumber = null, code = null } = req.body;
 
@@ -61,7 +59,6 @@ export const loginWithOtp = catchAsync(async (req, res, next) => {
   });
 });
 
-// ارسال مجدد کد تایید
 export const resendCode = catchAsync(async (req, res, next) => {
   const { phoneNumber = null } = req.body;
 
@@ -81,7 +78,6 @@ export const resendCode = catchAsync(async (req, res, next) => {
   });
 });
 
-// ورود با ایمیل و رمز عبور
 export const loginWithEmail = catchAsync(async (req, res, next) => {
   const { email = null, password = null } = req.body;
   if (!email || !password)

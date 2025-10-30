@@ -9,7 +9,6 @@ export default function GetAllCategory() {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // 📥 دریافت لیست دسته‌بندی‌ها
   useEffect(() => {
     (async () => {
       const result = await fetchData("category", {
@@ -22,7 +21,6 @@ export default function GetAllCategory() {
     })();
   }, [token]);
 
-  // 🗑️ حذف دسته‌بندی
   const handleDelete = async (id, image) => {
     const result = await fetchData(`category/${id}`, {
       method: "DELETE",
@@ -44,7 +42,6 @@ export default function GetAllCategory() {
     }
   };
 
-  // 🧾 رندر سطرها
   const items = categories.map((c, idx) => (
     <tr
       key={c._id}
@@ -95,7 +92,6 @@ export default function GetAllCategory() {
       className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 text-gray-200"
       dir="rtl"
     >
-      {/* هدر */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text">
           لیست دسته‌بندی‌ها
@@ -108,7 +104,6 @@ export default function GetAllCategory() {
         </button>
       </div>
 
-      {/* جدول */}
       <div className="overflow-x-auto rounded-lg">
         <table className="min-w-full text-right">
           <thead>
