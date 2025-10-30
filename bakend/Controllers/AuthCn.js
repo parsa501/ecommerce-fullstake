@@ -18,11 +18,8 @@ export const auth = catchAsync(async (req, res, next) => {
 
   const user = await User.findOne({ phoneNumber });
 
-  if (!user || !user?.password) {
-    const smsResult = await sendAuthCode(phoneNumber);
-    if (!smsResult.success)
-      return next(new HandleERROR(smsResult.message, 500));
-  }
+  const smsResult = await sendAuthCode(phoneNumber);
+  if (!smsResult.success) return next(new HandleERROR(smsResult.message, 500));
 
   return res.status(200).json({
     success: true,
