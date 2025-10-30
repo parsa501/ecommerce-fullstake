@@ -172,25 +172,46 @@ export default function Navbar() {
         >
           محصولات <FaAngleDown />
         </button>
-        <button className="hidden sm:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition">
-          خانه و آشپزخانه <FaAngleDown />
+        <button
+          onClick={() => navigate("/products")}
+          className="hidden sm:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition"
+        >
+          کالای خواب <FaAngleDown />
         </button>
-        <button className="hidden md:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition">
+        <button
+          onClick={() => navigate("/products")}
+          className="hidden md:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition"
+        >
           مد و پوشاک <FaAngleDown />
         </button>
-        <button className="hidden lg:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition">
+        <button
+          onClick={() => navigate("/products")}
+          className="hidden lg:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition"
+        >
           الکترونیک <FaAngleDown />
         </button>
-        <button className="hidden lg:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition">
-          زیبایی <FaAngleDown />
+        <button
+          onClick={() => navigate("/products")}
+          className="hidden lg:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition"
+        >
+          لگو <FaAngleDown />
         </button>
-        <button className="hidden xl:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition">
+        <button
+          onClick={() => navigate("/products")}
+          className="hidden xl:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition"
+        >
           بهبود خانه <FaAngleDown />
         </button>
-        <button className="hidden xl:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition">
+        <button
+          onClick={() => navigate("/products")}
+          className="hidden xl:flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition"
+        >
           ورزش و سفر <FaAngleDown />
         </button>
-        <button className="xl:hidden flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition">
+        <button
+          onClick={() => navigate("/products")}
+          className="xl:hidden flex text-[14px] items-center gap-1 bg-[#F3F9FB] py-2 px-4 rounded-[18px] hover:bg-gray-100 transition"
+        >
           بیشتر...
         </button>
       </div>
