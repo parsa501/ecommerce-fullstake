@@ -16,11 +16,12 @@ export default function Profile() {
       username: user?.username || "",
       email: user?.email || "",
       password: "",
+      role: user?.role || "",
     },
     validationSchema: Yup.object({
-      username: Yup.string().required("Username is required"),
-      email: Yup.string().email("Invalid email").required("Email is required"),
-      password: Yup.string().min(6, "At least 6 characters"),
+      username: Yup.string().required("نام کاربری الزامی است"),
+      email: Yup.string().email("ایمیل نامعتبر است").required("ایمیل الزامی است"),
+      password: Yup.string().min(8, "رمز عبور حداقل ۸ کاراکتر باشد"),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       const body = {
@@ -28,9 +29,10 @@ export default function Profile() {
         email: values.email,
       };
       if (values.password) body.password = values.password;
+      if (user?.role === "superAdmin") body.role = values.role;
 
-      const res = await fetchData(`users/${user?.id}`, {
-        method: "PUT",
+      const res = await fetchData(`users/${user?._id}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -38,12 +40,12 @@ export default function Profile() {
         body: JSON.stringify(body),
       });
 
-      if (res?.id) {
-        dispatch(login({ token, user: res }));
-        Notify("success", "Profile updated successfully");
+      if (res?.success && res?.data?.user) {
+        dispatch(login({ token, user: res.data.user }));
+        Notify("success", "اطلاعات پروفایل با موفقیت به‌روزرسانی شد");
         resetForm({ values: { ...values, password: "" } });
       } else {
-        Notify("error", res?.error?.message || "Failed to update profile");
+        Notify("error", res?.message || "به‌روزرسانی پروفایل انجام نشد");
       }
 
       setSubmitting(false);
@@ -51,70 +53,95 @@ export default function Profile() {
   });
 
   return (
-    <div className="w-[90%] flex flex-col md:flex-row px-[5%] mt-20 ">
+    <div className="w-[90%] flex flex-col md:flex-row-reverse px-[5%] mt-20 gap-10" dir="rtl">
+      {/* تصویر کاربر */}
       <div className="flex-3/4">
-        <img src={assets.Profile} alt="Profile" />
+        <img src={assets.Profile} alt="پروفایل" className="rounded-2xl shadow-lg" />
       </div>
+
+      {/* فرم و اطلاعات پروفایل */}
       <div className="flex-1/4 my-8">
-        <h1 className="text-3xl font-bold mb-6">Edit Profile</h1>
-        <form onSubmit={formik.handleSubmit} className="space-y-6">
+        <h1 className="text-3xl font-bold mb-4 text-right">ویرایش پروفایل</h1>
+        <p className="text-gray-600 mb-6 text-right">
+          لطفاً اطلاعات پروفایل خود را تکمیل و به‌روزرسانی کنید. نام کاربری و ایمیل الزامی است، رمز عبور جدید در صورت تمایل وارد شود.
+        </p>
+
+        <form onSubmit={formik.handleSubmit} className="space-y-6 text-right">
+          {/* نام کاربری */}
           <div>
+            <label className="block mb-1 font-semibold">نام کاربری</label>
             <input
               type="text"
               name="username"
-              placeholder="Username"
-              className="w-full border px-4 py-3 rounded"
+              placeholder="نام کاربری"
+              className="w-full border px-4 py-3 rounded text-right"
               {...formik.getFieldProps("username")}
             />
             {formik.touched.username && formik.errors.username && (
-              <div className="text-red-500 text-sm mt-1">
-                {formik.errors.username}
-              </div>
+              <div className="text-red-500 text-sm mt-1">{formik.errors.username}</div>
             )}
           </div>
 
+          {/* ایمیل */}
           <div>
+            <label className="block mb-1 font-semibold">ایمیل</label>
             <input
               type="email"
               name="email"
-              placeholder="Email"
-              className="w-full border px-4 py-3 rounded"
+              placeholder="ایمیل"
+              className="w-full border px-4 py-3 rounded text-right"
               {...formik.getFieldProps("email")}
             />
             {formik.touched.email && formik.errors.email && (
-              <div className="text-red-500 text-sm mt-1">
-                {formik.errors.email}
-              </div>
+              <div className="text-red-500 text-sm mt-1">{formik.errors.email}</div>
             )}
           </div>
 
+          {/* رمز عبور */}
           <div>
+            <label className="block mb-1 font-semibold">رمز عبور جدید</label>
             <input
               type="password"
               name="password"
-              placeholder="New Password (optional)"
-              className="w-full border px-4 py-3 rounded"
+              placeholder="رمز عبور جدید (اختیاری)"
+              className="w-full border px-4 py-3 rounded text-right"
               {...formik.getFieldProps("password")}
             />
             {formik.touched.password && formik.errors.password && (
-              <div className="text-red-500 text-sm mt-1">
-                {formik.errors.password}
-              </div>
+              <div className="text-red-500 text-sm mt-1">{formik.errors.password}</div>
             )}
           </div>
 
+          {/* نقش کاربری فقط برای superAdmin */}
+          {user?.role === "superAdmin" && (
+            <div>
+              <label className="block mb-1 font-semibold">نقش کاربری</label>
+              <select
+                name="role"
+                className="w-full border px-4 py-3 rounded text-right"
+                {...formik.getFieldProps("role")}
+              >
+                <option value="user">کاربر</option>
+                <option value="admin">مدیر</option>
+                <option value="superAdmin">سوپرادمین</option>
+              </select>
+            </div>
+          )}
+
+          {/* دکمه‌ها */}
           <button
             type="submit"
             disabled={formik.isSubmitting}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded"
           >
-            {formik.isSubmitting ? "Updating..." : "Update Profile"}
+            {formik.isSubmitting ? "در حال بروزرسانی..." : "بروزرسانی پروفایل"}
           </button>
           <button
+            type="button"
             onClick={() => dispatch(logout())}
             className="w-full bg-red-600 hover:bg-red-700 -mt-4 text-white py-3 rounded"
           >
-            logout
+            خروج
           </button>
         </form>
       </div>
