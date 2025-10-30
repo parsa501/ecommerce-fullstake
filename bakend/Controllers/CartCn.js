@@ -18,7 +18,7 @@ export const clear = catchAsync(async (req, res, next) => {
 
 export const getOne = catchAsync(async (req, res, next) => {
   const cart = await Cart.findOne({ userId: req.userId }).populate([
-    { path: "items.productId", select: "title" },
+    { path: "items.productId", select: "title images" },
     { path: "items.categoryId", select: "title" },
     {
       path: "items.productVariantId",
