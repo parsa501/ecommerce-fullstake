@@ -10,7 +10,7 @@ import { assets } from "../../assets/assest";
 import SearchBar from "./SearchBar";
 import fetchData from "../../Utils/fetchData";
 
-export default function NavbarFa() {
+export default function Navbar() {
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
   const [cart, setCart] = useState();

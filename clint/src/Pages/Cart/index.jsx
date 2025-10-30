@@ -19,19 +19,13 @@ export default function Cart() {
   const getCart = async () => {
     if (!token) return;
     setLoading(true);
-    try {
-      const res = await fetchData("cart", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res?.success && res.data) setCart(res.data);
-      else setCart({ items: [] });
-    } catch (err) {
-      console.error("getCart error:", err);
-      setCart({ items: [] });
-    } finally {
-      setLoading(false);
-    }
+
+    const res = await fetchData("cart", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res?.success && res.data) setCart(res.data);
+    else setCart({ items: [] });
   };
 
   useEffect(() => {
