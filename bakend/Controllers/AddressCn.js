@@ -17,7 +17,7 @@ export const create = catchAsync(async (req, res, next) => {
 
 export const getAll = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(Address, req.query, req.role)
-    .addManualFilters(req.role === "admin" ? {} : { userId: req.userId })
+    .addManualFilters(req.role !== "user" ? {} : { userId: req.userId })
     .filter()
     .sort()
     .limitFields()
@@ -34,7 +34,7 @@ export const getAll = catchAsync(async (req, res, next) => {
 });
 export const getOne = catchAsync(async (req, res, next) => {
   const filters =
-    req.role === "admin"
+    req.role !== "user"
       ? { _id: req.params.id }
       : { userId: req.userId, _id: req.params.id };
 
@@ -60,7 +60,7 @@ export const update = catchAsync(async (req, res, next) => {
   const { userId = null, ...updateData } = req.body;
 
   const searchQuery =
-    req.role === "admin" ? { _id: id } : { userId: req.userId, _id: id };
+    req.role !== "user" ? { _id: id } : { userId: req.userId, _id: id };
 
   const address = await Address.findOneAndUpdate(searchQuery, updateData, {
     new: true,

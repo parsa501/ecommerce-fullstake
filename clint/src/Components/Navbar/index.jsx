@@ -59,7 +59,7 @@ export default function Navbar() {
           onClick={() => navigate("/")}
           className="text-[28px] cursor-pointer font-extrabold text-gray-800"
         >
-          فروشگاه
+          دیجی‌شاپ
         </h1>
 
         <div className="w-[30%]">
@@ -111,7 +111,7 @@ export default function Navbar() {
           onClick={() => navigate("/")}
           className="text-[26px] cursor-pointer font-extrabold text-gray-800"
         >
-          فروشگاه
+         دیجی‌شاپ
         </h1>
 
         <div
