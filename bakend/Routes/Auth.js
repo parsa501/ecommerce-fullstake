@@ -36,27 +36,6 @@
  *                 message:
  *                   type: string
  *
- * /api/auth/login-password:
- *   post:
- *     tags: [احراز هویت]
- *     summary: ورود با رمز عبور
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               phoneNumber:
- *                 type: string
- *                 example: "09123456789"
- *               password:
- *                 type: string
- *                 example: "Password123"
- *     responses:
- *       200:
- *         description: ورود موفق
- *
  * /api/auth/login-otp:
  *   post:
  *     tags: [احراز هویت]
@@ -96,30 +75,6 @@
  *       200:
  *         description: کد تایید ارسال شد
  *
- * /api/auth/forget-password:
- *   post:
- *     tags: [احراز هویت]
- *     summary: بازنشانی رمز عبور
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               phoneNumber:
- *                 type: string
- *                 example: "09123456789"
- *               password:
- *                 type: string
- *                 example: "NewPassword123"
- *               code:
- *                 type: string
- *                 example: "1234"
- *     responses:
- *       200:
- *         description: رمز عبور با موفقیت بازنشانی شد
- *
  * /api/auth/login-email:
  *   post:
  *     tags: [احراز هویت]
@@ -145,20 +100,16 @@
 import express from "express";
 import {
   auth,
-  loginWithPassword,
   loginWithOtp,
   resendCode,
-  forgetPassword,
   loginWithEmail,
 } from "../Controllers/AuthCn.js";
 
 const router = express.Router();
 
 router.post("/", auth);
-router.post("/login-password", loginWithPassword);
 router.post("/login-otp", loginWithOtp);
 router.post("/resend-code", resendCode);
-router.post("/forget-password", forgetPassword);
 router.post("/login-email", loginWithEmail);
 
 export default router;
