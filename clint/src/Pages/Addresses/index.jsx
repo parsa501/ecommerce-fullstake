@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import useFormFields from "../../Utils/useFormFields";
 import { useNavigate } from "react-router-dom";
 import fetchData from "../../Utils/fetchData";
@@ -19,9 +19,7 @@ export default function CreateAddress() {
   });
 
   const { token } = useSelector((state) => state.auth);
-
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
 
   const validate = () => {
@@ -36,23 +34,20 @@ export default function CreateAddress() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const v = validate();
-    if (v) {
-      Notify("error", v);
-      return;
-    }
+    if (v) return Notify("error", v);
 
     setLoading(true);
     try {
       const payload = {
-        street: String(fields.street || "").trim(),
-        city: String(fields.city || "").trim(),
-        state: String(fields.state || "").trim() || null,
-        postalCode: String(fields.postalCode || "").trim() || null,
-        receiverPhoneNumber: String(fields.receiverPhoneNumber || "").trim(),
-        receiverFullName: String(fields.receiverFullName || "").trim(),
-        pelak: String(fields.pelak || "").trim() || null,
-        description: String(fields.description || "").trim() || null,
-        label: String(fields.label || "").trim() || null,
+        street: fields.street.trim(),
+        city: fields.city.trim(),
+        state: fields.state.trim() || null,
+        postalCode: fields.postalCode.trim() || null,
+        receiverPhoneNumber: fields.receiverPhoneNumber.trim(),
+        receiverFullName: fields.receiverFullName.trim(),
+        pelak: fields.pelak.trim() || null,
+        description: fields.description.trim() || null,
+        label: fields.label.trim() || null,
       };
 
       const result = await fetchData("Address", {
@@ -77,7 +72,7 @@ export default function CreateAddress() {
           description: "",
           label: "",
         });
-        navigate("/address");
+        navigate("/order");
       } else {
         Notify("error", result?.message || "خطا در ثبت آدرس");
       }
@@ -91,15 +86,15 @@ export default function CreateAddress() {
 
   return (
     <div
-      className="bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-6 max-w-2xl mx-auto text-gray-800 "
+      className="bg-white shadow-xl border mb-16 border-gray-200 rounded-2xl p-8 max-w-2xl mx-auto mt-10"
       dir="rtl"
     >
-      <h2 className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text mb-6">
+      <h2 className="text-3xl font-extrabold text-gray-800 text-center mb-8">
         ثبت آدرس جدید
       </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {[
             { name: "label", placeholder: "برچسب آدرس (مثلاً منزل)" },
             { name: "receiverFullName", placeholder: "نام گیرنده" },
@@ -115,7 +110,7 @@ export default function CreateAddress() {
               type="text"
               name={input.name}
               placeholder={input.placeholder}
-              className="bg-white/5 border-2 border-white/10 rounded-lg p-3 focus:outline-none focus:ring-2  focus:ring-cyan-400  placeholder-gray-900"
+              className="border border-gray-300 rounded-xl py-3 px-4 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all duration-200"
               value={fields[input.name] ?? ""}
               onChange={handleChange}
               dir={
@@ -130,7 +125,7 @@ export default function CreateAddress() {
         <textarea
           name="description"
           placeholder="توضیحات (اختیاری)"
-          className="bg-white/5 border border-white/20 rounded-lg p-3 w-full h-24 focus:outline-none focus:ring-2 focus:ring-cyan-400 text-gray-900 placeholder-gray-400"
+          className="border border-gray-300 rounded-xl py-3 px-4 w-full h-28 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all duration-200"
           value={fields.description ?? ""}
           onChange={handleChange}
           dir="rtl"
@@ -139,7 +134,7 @@ export default function CreateAddress() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-gradient-to-r from-purple-500 to-cyan-500  font-bold py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-60"
+          className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-60"
         >
           {loading ? "در حال ارسال..." : "ثبت آدرس"}
         </button>
