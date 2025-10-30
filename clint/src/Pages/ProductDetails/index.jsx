@@ -5,187 +5,239 @@ import fetchData from "../../Utils/fetchData";
 import { FaChevronLeft } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
 import StarRatings from "react-star-ratings";
-import { useDispatch, useSelector } from "react-redux";
-import { addItem, removeItem } from "../../Store/Slices/CartSlice";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
 
 export default function ProductDetails() {
-  const [product, setProduct] = useState();
+  const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [cartQuantity, setCartQuantity] = useState(0);
+  const [loadingCart, setLoadingCart] = useState(false);
+
   const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const cartQuantity =
-    useSelector((state) =>
-      state.cart.items.find((item) => item.id === product?.id)
-    )?.cartQuantity || 0;
 
+  const baseUrl = import.meta.env.VITE_BASE_FILE;
+  const { token } = useSelector((state) => state.auth);
+  // گرفتن اطلاعات محصول
   useEffect(() => {
     (async () => {
-      const response = await fetchData(`product/${id}`);
-      const data = response?.data;
-      setProduct(data);
-      if (data?.images?.length > 0) {
-        setSelectedImage(data.images[0].url);
+      const res = await fetchData(`product/${id}`);
+      if (res?.data) {
+        setProduct(res.data);
+        if (res.data.images?.length > 0) {
+          setSelectedImage(res.data.images[0]);
+        }
       }
     })();
   }, [id]);
 
+  // گرفتن سبد خرید برای بررسی تعداد این محصول
+  useEffect(() => {
+    if (!token) return;
+    (async () => {
+      const res = await fetchData("cart", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res?.data?.items) {
+        const item = res.data.items.find(
+          (i) => i.productId._id === id || i.productId === id
+        );
+        setCartQuantity(item ? item.cartQuantity : 0);
+      }
+    })();
+  }, [id, token]);
+
   if (!product) return <Loading />;
 
+  const priceInfo = product.defaultProductVariantId;
+  const brand = product.brandId?.title || "نامشخص";
+  const category = product.categoryId?.title || "بدون دسته‌بندی";
+  const price = priceInfo?.price || null;
+  const discount = priceInfo?.discount || 0;
+  const finalPrice = priceInfo?.priceAfterDiscount || null;
+// ✅ افزودن محصول به سبد خرید
+const handleAddToCart = async () => {
+  if (!priceInfo?._id) {
+    alert("این محصول نوع (Variant) ندارد، قابل افزودن نیست!");
+    return;
+  }
+  setLoadingCart(true);
+
+  const res = await fetchData("cart", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ productVariantId: priceInfo._id }),
+  });
+
+  if (res?.success) {
+    const updatedItem = res.data.items.find(
+      (i) => i.productVariantId === priceInfo._id
+    );
+    setCartQuantity(updatedItem?.cartQuantity || 1);
+  }
+  setLoadingCart(false);
+};
+
+// ✅ حذف یک واحد از سبد خرید
+const handleRemoveFromCart = async () => {
+  if (!priceInfo?._id) return;
+  setLoadingCart(true);
+
+  const res = await fetchData("cart", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ productVariantId: priceInfo._id }),
+  });
+
+  if (res?.success) {
+    const updatedItem = res.data.items.find(
+      (i) => i.productVariantId === priceInfo._id
+    );
+    setCartQuantity(updatedItem?.cartQuantity || 0);
+  }
+  setLoadingCart(false);
+};
+
+
   return (
-    <>
-      <div className="flex items-center justify-between px-[8%]">
-        <div className="flex items-center gap-4 mt-9">
-          <div
-            onClick={() => navigate("/")}
-            className="cursor-pointer flex items-center border border-gray-300 rounded-full w-16 h-16 justify-center"
-          >
-            <FaChevronLeft className="text-xl" />
-          </div>
-          <span className="text-base sm:text-lg md:text-xl font-medium text-gray-800">
-            Back
-          </span>
+    <div className="px-[6%] py-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-3 cursor-pointer"
+        >
+          <FaChevronLeft className="text-xl" />
+          <span className="text-lg font-medium">بازگشت</span>
         </div>
-        <FiShare2 className="text-2xl" />
+        <FiShare2 className="text-2xl cursor-pointer" />
       </div>
 
-      <div className="px-[6%] flex flex-col md:flex-row gap-6 my-8">
+      {/* Main Section */}
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Images */}
         <div className="w-full md:w-1/2 flex flex-col gap-4">
           <img
-            className="w-full h-64 sm:h-80 md:h-96 object-contain border border-gray-300 rounded-md shadow-sm"
-            src={import.meta.env.VITE_BASE_FILE + selectedImage}
-            alt="default product"
+            src={baseUrl + selectedImage}
+            alt={product.title}
+            className="w-full h-80 object-contain rounded-xl border shadow-sm"
           />
 
           <div className="flex gap-3 overflow-x-auto">
-            {product.images.map((img, i) => (
+            {product.images?.map((img, i) => (
               <img
                 key={i}
-                src={import.meta.env.VITE_BASE_FILE + img.url}
-                alt={img.name}
-                onClick={() => setSelectedImage(img.url)}
-                className={`w-16 sm:w-20 h-16 sm:h-20 object-fill border border-gray-300 rounded-md cursor-pointer transition-all duration-200 ${
-                  selectedImage === img.url ? "border-4" : "hover:opacity-80"
+                src={baseUrl + img}
+                alt={`img-${i}`}
+                onClick={() => setSelectedImage(img)}
+                className={`w-20 h-20 object-cover border rounded-md cursor-pointer ${
+                  selectedImage === img ? "border-4 border-indigo-500" : ""
                 }`}
               />
             ))}
           </div>
         </div>
 
-        <div className="w-full md:w-1/2 bg-white rounded-3xl shadow-2xl p-6 sm:p-8 flex flex-col gap-6">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900">
-            {product.name}
+        {/* Details */}
+        <div className="w-full md:w-1/2 bg-white p-8 rounded-3xl shadow-lg flex flex-col gap-6">
+          <h1 className="text-3xl font-extrabold text-gray-900">
+            {product.title}
           </h1>
 
-          <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed">
-            {product.description}
-          </p>
+          <p className="text-gray-600 leading-relaxed">{product.description}</p>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-baseline gap-4">
-            <div className="flex items-baseline gap-3">
-              <span className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-green-600">
-                {(product.price * (1 - product.offer / 100)).toFixed(2)}$
+          {/* Price */}
+          {price ? (
+            <div className="flex items-center gap-3">
+              <span className="text-3xl font-bold text-green-600">
+                {finalPrice.toLocaleString()} تومان
               </span>
-              <span className="text-sm sm:text-base md:text-lg text-gray-400 line-through">
-                {product.price.toFixed(2)}$
-              </span>
+              {discount > 0 && (
+                <>
+                  <span className="text-gray-400 line-through text-lg">
+                    {price.toLocaleString()} تومان
+                  </span>
+                  <span className="bg-red-100 text-red-700 text-sm font-semibold px-3 py-1 rounded-full">
+                    {discount}% تخفیف
+                  </span>
+                </>
+              )}
             </div>
-            <span className="bg-red-100 text-red-700 font-semibold px-3 py-1 rounded-full animate-pulse text-xs sm:text-sm">
-              {product.offer}% OFF
+          ) : (
+            <span className="text-gray-500 italic">
+              قیمت برای این محصول ثبت نشده است
+            </span>
+          )}
+
+          {/* Brand / Category */}
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <p>
+              <span className="font-medium">برند:</span> {brand}
+            </p>
+            <p>
+              <span className="font-medium">دسته‌بندی:</span> {category}
+            </p>
+          </div>
+
+          {/* Rating */}
+          <div className="flex items-center gap-3">
+            <StarRatings
+              rating={product.rating || 0}
+              starRatedColor="#f59e0b"
+              numberOfStars={5}
+              starDimension="22px"
+              starSpacing="1px"
+            />
+            <span className="text-gray-600 text-sm">
+              ({product.rateCount || 0} نظر)
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 text-gray-800 text-xs sm:text-sm md:text-base">
-            <p>
-              <span className="font-medium">Brand:</span> {product.brand}
-            </p>
-            <p>
-              <span className="font-medium">Color:</span> {product.color}
-            </p>
-            <p>
-              <span className="font-medium">Size:</span> {product.size}
-            </p>
-            <p>
-              <span className="font-medium">Category:</span>{" "}
-              {product.categories.map((c) => c.title).join(", ")}
-            </p>
-          </div>
-
-          <div className="flex flex-col justify-center gap-3">
-            <div className="flex items-center gap-3">
-              <span className="font-medium text-gray-800 text-[20px] sm:text-base">
-                Rating:
-              </span>
-              <StarRatings
-                rating={product.rating}
-                starRatedColor="#f59e0b"
-                numberOfStars={5}
-                starDimension="24px"
-                starSpacing="1px"
-                starHoverColor="#d97706"
-              />
-              <span className="text-xs sm:text-sm text-gray-600 ml-2">
-                ({product.rating})
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="font-medium text-gray-800 text-sm sm:text-base">
-                user:
-              </span>
-              <span className="text-xs sm:text-sm text-gray-600 ml-2">
-                ({product?.rating * 500})
-              </span>
-            </div>
-          </div>
-
+          {/* Cart */}
           {cartQuantity > 0 ? (
-            <div className="mt-6 flex items-center gap-6">
+            <div className="flex items-center gap-6 mt-4">
               <motion.button
-                whileTap={{ scale: 0.9, rotate: -10 }}
-                onClick={() => dispatch(removeItem(product.id))}
-                className="bg-red-500 text-white w-20 h-10 rounded-xl font-bold text-xl shadow-md hover:bg-red-600 transition duration-200"
+                whileTap={{ scale: 0.9 }}
+                onClick={handleRemoveFromCart}
+                disabled={loadingCart}
+                className="bg-red-500 text-white w-12 h-12 rounded-xl font-bold text-xl disabled:opacity-50"
               >
                 −
               </motion.button>
 
-              <motion.span
-                key={cartQuantity}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="text-2xl px-3  font-bold text-gray-800"
-              >
-                {cartQuantity}
-              </motion.span>
+              <span className="text-2xl font-bold">{cartQuantity}</span>
 
               <motion.button
-                whileTap={{ scale: 0.9, rotate: 10 }}
-                onClick={() => {
-                  if (cartQuantity < product.quantity) {
-                    dispatch(addItem(product));
-                  }
-                }}
-                disabled={cartQuantity >= product.quantity}
-                className={`w-20 h-10 rounded-xl font-bold text-xl shadow-md transition duration-200 ${
-                  cartQuantity >= product.quantity
-                    ? "bg-green-300 cursor-not-allowed text-white"
-                    : "bg-green-500 hover:bg-green-600 text-white"
-                }`}
+                whileTap={{ scale: 0.9 }}
+                onClick={handleAddToCart}
+                disabled={loadingCart}
+                className="bg-green-500 text-white w-12 h-12 rounded-xl font-bold text-xl disabled:opacity-50"
               >
                 +
               </motion.button>
             </div>
           ) : (
             <button
-              onClick={() => dispatch(addItem(product))}
-              className="mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-base sm:text-lg font-semibold py-3 rounded-2xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all"
+              onClick={handleAddToCart}
+              disabled={loadingCart}
+              className="mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-lg font-semibold py-3 rounded-2xl shadow-md hover:shadow-lg transition-all disabled:opacity-50"
             >
-              Add to Cart
+              {loadingCart ? "در حال افزودن..." : "افزودن به سبد خرید"}
             </button>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
