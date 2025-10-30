@@ -71,8 +71,8 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center justify-center text-[15px]">
-          <h3 className="flex items-center gap-1 text-[#FC7901] cursor-pointer hover:text-orange-600 transition">
-            <FaRegHandshake className="text-[20px]" /> پیشنهادهای من
+          <h3   onClick={() => navigate("/userquestions")} className="flex items-center gap-1 text-[#FC7901] cursor-pointer hover:text-orange-600 transition">
+            <FaRegHandshake className="text-[20px]" />سوالات کاربران
           </h3>
           <span className="mx-4 text-gray-300">|</span>
           <h3
