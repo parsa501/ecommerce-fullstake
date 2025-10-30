@@ -45,8 +45,8 @@ export default function Banner() {
       </Swiper>
 
       <div className="custom-prev absolute top-1/2 -left-4 sm:-left-6 md:-left-10 lg:-left-14 transform -translate-y-1/2 z-10 cursor-pointer">
-        <div className="w-[50px] sm:w-[70px] md:w-[90px] lg:w-[95px] h-[50px] sm:h-[70px] md:h-[90px] lg:h-[95px] rounded-full bg-white  flex items-center justify-center ">
-          <div className="w-[40px] sm:w-[60px] md:w-[80px] h-[40px] sm:h-[60px] md:h-[80px] rounded-full bg-[#F7FAFC] flex items-center justify-center">
+        <div className="w-[40px] sm:w-[60px] md:w-[80px] lg:w-[85px] h-[40px] sm:h-[60px] md:h-[80px] lg:h-[85px] rounded-full bg-white  flex items-center justify-center ">
+          <div className="w-[30px] sm:w-[50px] md:w-[70px] h-[30px] sm:h-[50px] md:h-[70px] rounded-full bg-[#F7FAFC] flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-4 h-4 sm:w-6 sm:h-6 text-[#1E1E1E]"
@@ -66,8 +66,8 @@ export default function Banner() {
       </div>
 
       <div className="custom-next absolute top-1/2 -right-4 sm:-right-6 md:-right-10 lg:-right-14 transform -translate-y-1/2 z-10 cursor-pointer">
-        <div className="w-[50px] sm:w-[70px] md:w-[90px] lg:w-[95px] h-[50px] sm:h-[70px] md:h-[90px] lg:h-[95px] rounded-full bg-white  flex items-center justify-center">
-          <div className="w-[40px] sm:w-[60px] md:w-[80px] h-[40px] sm:h-[60px] md:h-[80px] rounded-full bg-[#F7FAFC] flex items-center justify-center">
+        <div className="w-[40px] sm:w-[60px] md:w-[80px] lg:w-[85px] h-[40px] sm:h-[60px] md:h-[80px] lg:h-[85px] rounded-full bg-white  flex items-center justify-center ">
+          <div className="w-[30px] sm:w-[50px] md:w-[70px] h-[30px] sm:h-[50px] md:h-[70px] rounded-full bg-[#F7FAFC] flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-4 h-4 sm:w-6 sm:h-6 text-[#1E1E1E]"

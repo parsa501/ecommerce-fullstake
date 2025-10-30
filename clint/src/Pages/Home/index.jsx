@@ -8,6 +8,7 @@ import TopElectronicsBrands from "./TopElectronicsBrands";
 import FrequentlyBoughtTogether from "./FrequentlyBoughtTogether";
 import UserOpinion from "./UserOpinion";
 import FAQ from "./FAQ";
+import PromoShowcase from "./PromoShowcase";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <FastedDelivery />
       <Brand />
       <DealsOf />
+      <PromoShowcase/>
       <TopCateGories />
       <TopElectronicsBrands />
       <FrequentlyBoughtTogether />
