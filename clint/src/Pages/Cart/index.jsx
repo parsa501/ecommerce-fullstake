@@ -268,7 +268,10 @@ export default function Cart() {
                 <span>{fmt(totalWithDiscount)} تومان</span>
               </div>
 
-              <button className="mt-2 w-full py-2 rounded-md bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-sm hover:shadow-md transition">
+              <button
+                onClick={() => navigate("/order")}
+                className="mt-2 w-full py-2 rounded-md bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-sm hover:shadow-md transition"
+              >
                 پرداخت
               </button>
             </div>
