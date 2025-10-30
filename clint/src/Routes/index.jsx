@@ -11,6 +11,7 @@ import Auth from "../pages/Auth";
 import NotFound from "../pages/NotFound";
 import Category from "../pages/Category";
 import CategoryDetails from "../pages/CategoryDetails";
+import UserQuestions from "../pages/UserQuestions";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,16 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Cart />,
+          },
+        ],
+      },
+      {
+        path: "/userquestions",
+        element: <Private />,
+        children: [
+          {
+            index: true,
+            element: <UserQuestions />,
           },
         ],
       },
