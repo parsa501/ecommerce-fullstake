@@ -1,199 +1,286 @@
-import React from "react";
-import { FaChevronLeft } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaChevronRight } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import NotItems from "./NotItems";
-import { addItem, clearCart, removeItem } from "../../Store/Slices/CartSlice";
 import { HiOutlineTrash } from "react-icons/hi";
+import fetchData from "../../Utils/fetchData";
+import Loading from "../../components/Loding";
+import { useSelector } from "react-redux";
 
 export default function Cart() {
   const navigate = useNavigate();
-  const { items, totalPrice } = useSelector((state) => state.cart);
-  const dispatch = useDispatch();
-  const cartLength = useSelector((state) => state.cart.items).length;
+  const { token } = useSelector((state) => state.auth);
 
-  if (items.length == 0) return <NotItems />;
+  const [cart, setCart] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // گرفتن سبد خرید
+  const getCart = async () => {
+    if (!token) return;
+    setLoading(true);
+    try {
+      const res = await fetchData("cart", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res?.success && res.data) setCart(res.data);
+      else setCart({ items: [] });
+    } catch (err) {
+      console.error("getCart error:", err);
+      setCart({ items: [] });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getCart();
+  }, [token]);
+
+  // پاک کردن کل سبد
+  const handleClear = async () => {
+    if (!token) return;
+    setLoading(true);
+    try {
+      const res = await fetchData("cart/clear", {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res?.success && res.data) setCart(res.data);
+      else await getCart();
+    } catch (err) {
+      console.error("handleClear error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!cart) return <Loading />;
+
+  const items = Array.isArray(cart.items) ? cart.items : [];
+  const cartLength = items.length;
+
+  if (cartLength === 0) return <NotItems />;
+
+  // helper برای گرفتن مقادیر با ایمنی
+  const getVariant = (item) => item?.productVariantId ?? {};
+  const toNum = (v) => (typeof v === "number" ? v : Number(v) || 0);
+  const fmt = (n) => Number(n || 0).toLocaleString("fa-IR");
+
+  const totalWithoutDiscount = items.reduce((sum, itm) => {
+    const pv = getVariant(itm);
+    const price = toNum(pv.price ?? itm.price);
+    const qty = toNum(itm.cartQuantity ?? itm.quantity);
+    return sum + price * qty;
+  }, 0);
+
+  const totalDiscount = items.reduce((sum, itm) => {
+    const pv = getVariant(itm);
+    const price = toNum(pv.price ?? itm.price);
+    const discount = toNum(pv.discount ?? itm.discount);
+    const qty = toNum(itm.cartQuantity ?? itm.quantity);
+    return sum + ((price * discount) / 100) * qty;
+  }, 0);
+
+  const totalWithDiscount =
+    typeof cart.totalPriceAfterDiscount === "number"
+      ? cart.totalPriceAfterDiscount
+      : totalWithoutDiscount - totalDiscount;
+
+  const makeNameForUrl = (s) =>
+    encodeURIComponent(
+      String(s ?? "product")
+        .trim()
+        .replace(/\s+/g, "-")
+        .toLowerCase()
+    );
 
   return (
-    <>
-      <div className="flex items-center justify-between px-[8%]">
-        <div className="flex items-center gap-4 mt-9">
-          <div
-            onClick={() => navigate("/")}
-            className="cursor-pointer flex items-center border border-gray-300 rounded-full w-16 h-16 justify-center"
-          >
-            <FaChevronLeft className="text-xl" />
-          </div>
-          <span className="text-base sm:text-lg md:text-xl font-medium text-gray-800">
-            Back
-          </span>
-        </div>
-        <FiShare2 className="text-2xl" />
-      </div>
-
-      <div className="px-[6%] py-4">
-        <h2 className="text-[60px] font-bold">My Cart</h2>
-        <p className="text-[30px] text-black opacity-60">
-          Let’s create your offount
-        </p>
-
-        <div className="mt-[60px]">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <h3 className="text-[20px] font-bold">Number of Items :</h3>{" "}
-              <span className="font-bold px-2.5 py-0.5 rounded-full bg-red-300">
-                {cartLength}
-              </span>
-            </div>
+    <div dir="rtl" className="min-h-screen bg-gray-50 text-gray-800">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-10 py-6">
+        {/* header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
             <button
-              onClick={() => dispatch(clearCart())}
-              className="text-gray-500 flex items-center cursor-pointer gap-2 hover:text-gray-700 transition"
+              onClick={() => navigate(-1)}
+              className="flex items-center justify-center w-12 h-12 rounded-full border border-gray-300 bg-white shadow-sm"
+              aria-label="بازگشت"
             >
-              ClearCart <HiOutlineTrash className="text-[24px]" />
+              <FaChevronRight className="text-lg" />
             </button>
+            <div className="text-right">
+              <h1 className="text-xl sm:text-2xl font-semibold">سبد خرید من</h1>
+              <p className="text-sm text-gray-500">
+                خرید بعدی خود را آماده کنید
+              </p>
+            </div>
           </div>
+          <FiShare2 className="text-2xl text-gray-600" />
+        </div>
 
-          <div className="flex flex-col lg:flex-row lg:gap-6">
-            <table className="w-full lg:w-3/5 mt-8 text-left border-collapse">
-              <tbody className="flex flex-col gap-6">
-                {items.map((item) => (
-                  <tr
-                    key={item.documentId}
-                    className="flex flex-col lg:flex-row lg:items-center border-b border-gray-200 pb-6 lg:pb-2"
+        {/* content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* لیست محصولات */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium">تعداد آیتم‌ها:</span>
+                <span className="bg-red-300 px-3 py-1 rounded-full font-semibold">
+                  {fmt(cartLength)}
+                </span>
+              </div>
+              <button
+                onClick={handleClear}
+                disabled={loading}
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-800 disabled:opacity-60"
+              >
+                <HiOutlineTrash className="text-lg" />
+                پاک کردن کل سبد
+              </button>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm divide-y">
+              {items.map((item, idx) => {
+                const pv = getVariant(item);
+                const price = toNum(pv.price ?? item.price);
+                const discount = toNum(pv.discount ?? item.discount);
+                const finalPrice = toNum(pv.priceAfterDiscount ?? price);
+                const qty = toNum(item.cartQuantity ?? item.quantity);
+
+                const productId =
+                  item?.productId?._id ??
+                  item?.productId ??
+                  pv?._id ??
+                  `tmp-${idx}`;
+                const productName =
+                  item?.productId?.title ?? item?.title ?? "محصول";
+
+                return (
+                  <div
+                    key={productId + "-" + idx}
+                    className="flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 hover:bg-gray-50 transition"
                   >
-                    <td className="flex items-center gap-4 lg:w-2/5">
-                      <img
-                        src={
-                          import.meta.env.VITE_BASE_FILE + item.images[0]?.url
-                        }
-                        alt={item.name}
-                        className="w-20 h-20 lg:w-24 lg:h-24 object-fill rounded-md border-3 border-gray-300"
-                      />
-                      <span className="font-medium text-base lg:text-lg">
-                        {item.name.split(" ").slice(0, 3).join(" ")}
-                      </span>
-                    </td>
-
-                    <td className="mt-4 lg:mt-0 lg:w-1/5 text-sm">
-                      <span className="text-blue-600 text-[16px] font-semibold">
-                        ${(item.price * (1 - item.offer / 100)).toFixed(2)}
-                      </span>
-                      <span className="text-gray-400 line-through ml-2">
-                        ${item.price.toFixed(2)}
-                      </span>
-                    </td>
-
-                    <td className="mt-4 lg:mt-0 lg:w-1/5">
-                      <div className="flex items-center justify-center w-[80px] gap-2 border border-gray-300 rounded  py-1">
-                        <button
-                          onClick={() => dispatch(removeItem(item.documentId))}
-                          className="text-gray-600  py-1 rounded hover:bg-gray-100 transition"
-                        >
-                          −
-                        </button>
-                        <span className="font-semibold">
-                          {item.cartQuantity}
-                        </span>
-                        <button
-                          onClick={() => {
-                            if (item.cartQuantity < item.quantity)
-                              dispatch(addItem(item));
-                          }}
-                          disabled={item.cartQuantity >= item.quantity}
-                          className={` py-1 rounded transition ${
-                            item.cartQuantity >= item.quantity
-                              ? "text-gray-300 cursor-not-allowed"
-                              : "text-gray-900 hover:bg-gray-100"
-                          }`}
-                        >
-                          +
-                        </button>
+                    <div
+                      className="flex-1 min-w-0 cursor-pointer"
+                      onClick={() =>
+                        navigate(
+                          `/products-details/${productId}/${makeNameForUrl(
+                            productName
+                          )}`
+                        )
+                      }
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) =>
+                        e.key === "Enter" &&
+                        navigate(
+                          `/products-details/${productId}/${makeNameForUrl(
+                            productName
+                          )}`
+                        )
+                      }
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-20 h-20 bg-gray-100 rounded-md flex items-center justify-center text-gray-400">
+                          <img
+                            src={
+                              import.meta.env.VITE_BASE_FILE +
+                              item?.productId?.images?.[0]
+                            }
+                            alt="image"
+                          />
+                        </div>
+                        <div className="text-right">
+                          <div className="font-medium text-sm sm:text-base text-indigo-700">
+                            {productName}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            تعداد:{" "}
+                            <span className="font-semibold">{fmt(qty)}</span>
+                          </div>
+                        </div>
                       </div>
-                    </td>
+                    </div>
 
-                    <td className="mt-4 lg:mt-0 lg:w-1/5 text-sm flex items-center justify-between gap-2">
-                      <div>
-                        <span className="text-[16px] font-semibold">
-                          $
-                          {(
-                            item.cartQuantity *
-                            (item.price * (1 - item.offer / 100))
-                          ).toFixed(2)}
-                        </span>
-                        <span className="text-red-600 text-xs font-bold ml-2 bg-red-100 px-1 py-0.5 rounded-full">
-                          -{item.offer}%
-                        </span>
+                    <div className="w-full sm:w-auto flex items-center justify-between sm:flex-col sm:items-end gap-3">
+                      <div className="text-right">
+                        <div className="text-sm sm:text-base font-semibold text-blue-600">
+                          {fmt(finalPrice)} تومان
+                        </div>
+                        {discount > 0 && (
+                          <div className="text-xs text-gray-400 line-through">
+                            {fmt(price)} تومان
+                          </div>
+                        )}
                       </div>
+
+                      <div className="text-right">
+                        <div className="text-sm font-semibold">
+                          {fmt(finalPrice * qty)} تومان
+                        </div>
+                        {discount > 0 && (
+                          <div className="text-xs text-red-600 mt-1">
+                            -{fmt(discount)}%
+                          </div>
+                        )}
+                      </div>
+
                       <button
-                        onClick={() => dispatch(removeItem(item.documentId))}
-                        className="text-gray-500 hover:text-gray-700 transition"
+                        disabled
+                        className="text-gray-300 cursor-not-allowed"
+                        title="حذف تکی غیرفعال است"
                       >
                         <HiOutlineTrash className="text-xl" />
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
-            <div className="mt-8 lg:mt-0 w-full lg:w-2/5 flex justify-center">
-              <div className="w-full bg-white rounded-xl shadow-lg p-6 flex flex-col gap-4">
-                <h3 className="text-2xl font-bold text-gray-800 border-b pb-2">
-                  Invoice
-                </h3>
+          {/* فاکتور */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-lg shadow-lg p-5 flex flex-col gap-4">
+              <h3 className="text-lg font-bold text-gray-800">صورتحساب</h3>
 
-                <div className="flex justify-between">
-                  <span>Total Items:</span>
-                  <span>{cartLength}</span>
-                </div>
-
-                <div className="flex justify-between">
-                  <span>Total Without Discount:</span>
-                  <span className="text-green-600 font-medium">
-                    $
-                    {items
-                      .reduce(
-                        (sum, itm) => sum + itm.price * itm.cartQuantity,
-                        0
-                      )
-                      .toFixed(2)}
-                  </span>
-                </div>
-
-                <div className="flex justify-between font-medium">
-                  <span>Total Discount:</span>
-                  <span className="text-red-600">
-                    - $
-                    {items
-                      .reduce(
-                        (sum, itm) =>
-                          sum +
-                          (itm.cartQuantity * (itm.price * itm.offer)) / 100,
-                        0
-                      )
-                      .toFixed(2)}
-                  </span>
-                </div>
-
-                <div className="flex justify-between">
-                  <span>Shipping Fee:</span>
-                  <span className="font-medium">${cartLength * 10}.00</span>
-                </div>
-
-                <div className="flex justify-between font-bold text-indigo-600 text-lg">
-                  <span>Total With Discount :</span>
-                  <span>${(totalPrice + 10).toFixed(2)}</span>
-                </div>
-
-                <button className="mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 rounded-xl font-semibold hover:shadow-xl transition">
-                  Proceed to Checkout
-                </button>
+              <div className="flex justify-between text-sm">
+                <span>مجموع آیتم‌ها</span>
+                <span className="font-medium">{fmt(cartLength)}</span>
               </div>
+
+              <div className="flex justify-between text-sm">
+                <span>مجموع قبل از تخفیف</span>
+                <span className="font-medium text-green-600">
+                  {fmt(totalWithoutDiscount)} تومان
+                </span>
+              </div>
+
+              <div className="flex justify-between text-sm">
+                <span>مجموع تخفیف</span>
+                <span className="font-medium text-red-600">
+                  -{fmt(totalDiscount)} تومان
+                </span>
+              </div>
+
+              <div className="flex justify-between text-sm">
+                <span>هزینه ارسال</span>
+                <span className="font-medium">0 تومان</span>
+              </div>
+
+              <div className="flex justify-between text-lg font-bold text-indigo-600 mt-2">
+                <span>مبلغ قابل پرداخت</span>
+                <span>{fmt(totalWithDiscount)} تومان</span>
+              </div>
+
+              <button className="mt-2 w-full py-2 rounded-md bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-sm hover:shadow-md transition">
+                پرداخت
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
