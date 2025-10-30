@@ -48,7 +48,7 @@ export default function Navbar() {
       <div className="hidden md:flex h-[90px] px-[8%] items-center justify-between bg-white shadow-sm">
         <span
           className="text-black w-[48px] h-[48px] bg-[#F3F9FB] flex items-center justify-center text-[24px] rounded-[12px] shadow-sm cursor-pointer hover:bg-gray-100 transition"
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => setMenuOpen(!menuOpen) || navigate("/")}
         >
           <HiOutlineMenuAlt2 />
         </span>
