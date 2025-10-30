@@ -133,7 +133,7 @@ import isLogin from "../Middlewares/IsLogin.js";
 import isAdmin from "../Middlewares/IsAdmin.js";
 
 const commentRouter = express.Router();
-commentRouter.route("/").post(isLogin, create).get(getAll);
+commentRouter.route("/").post(isLogin, create).get(isAdmin, getAll);
 commentRouter
   .route("/:id")
   .get(getAllPostComments)
