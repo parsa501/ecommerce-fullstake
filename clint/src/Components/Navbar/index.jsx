@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { FaRegHandshake } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
@@ -8,11 +8,24 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { assets } from "../../assets/assest";
 import SearchBar from "./SearchBar";
+import fetchData from "../../Utils/fetchData";
 
 export default function NavbarFa() {
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
-  const cartLength = useSelector((state) => state.cart.items).length;
+  const [cart, setCart] = useState();
+  useEffect(() => {
+    (async () => {
+      const res = await fetchData("cart", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log(res);
+      setCart(res?.data?.items);
+    })();
+  }, []);
+
+  const cartLength = cart?.length;
 
   const [searchValue, setSearchValue] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -23,9 +36,13 @@ export default function NavbarFa() {
       <div className="px-[5%] h-[42px] bg-black text-white flex justify-center sm:justify-between items-center sm:px-[8%]">
         <p className="text-[14px]">به فروشگاه بزرگ ما خوش آمدید!</p>
         <div className="flex gap-4 items-center">
-          <h3 className="hidden sm:flex text-[14px] cursor-pointer hover:text-gray-300">پیگیری سفارش</h3>
+          <h3 className="hidden sm:flex text-[14px] cursor-pointer hover:text-gray-300">
+            پیگیری سفارش
+          </h3>
           <span className="hidden sm:flex">|</span>
-          <h3 className="hidden sm:flex text-[14px] cursor-pointer hover:text-gray-300">تمام پیشنهادها</h3>
+          <h3 className="hidden sm:flex text-[14px] cursor-pointer hover:text-gray-300">
+            تمام پیشنهادها
+          </h3>
         </div>
       </div>
 
@@ -148,7 +165,7 @@ export default function NavbarFa() {
           onClick={() => navigate("/category")}
           className="text-[14px] flex items-center gap-1 bg-black text-white py-2 px-4 rounded-[18px] hover:bg-gray-800 transition"
         >
-       دسته‌بندی‌ها <FaAngleDown />
+          دسته‌بندی‌ها <FaAngleDown />
         </button>
         <button
           onClick={() => navigate("/products")}
